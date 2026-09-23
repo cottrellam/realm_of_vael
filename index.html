@@ -30,7 +30,7 @@ html,body{background:var(--bg);color:var(--text);font-family:var(--font);min-hei
 .card .sub{font-size:12px;color:var(--text2);margin-bottom:10px;font-family:var(--mono)}
 .lore{font-size:13px;color:var(--text2);line-height:1.7;border-left:2px solid var(--gold);padding-left:10px;margin:8px 0 12px;font-style:italic}
 .section-label{font-size:11px;font-family:var(--mono);color:var(--text3);letter-spacing:1px;margin:14px 0 6px}
-.btn{background:transparent;border:0.5px solid var(--border2);border-radius:var(--radius);padding:9px 18px;font-family:var(--font);font-size:13px;color:var(--text);cursor:pointer;transition:all 0.15s}
+.btn{background:transparent;border:0.5px solid var(--border2);border-radius:var(--radius);padding:9px 14px;font-family:var(--font);font-size:13px;color:var(--text);cursor:pointer;transition:all 0.15s;min-height:40px;height:auto;box-sizing:border-box;line-height:1.4;display:inline-flex;align-items:center;justify-content:center;text-align:center;-webkit-tap-highlight-color:rgba(201,168,76,0.2)}
 .btn:hover{background:var(--bg3)}.btn:active{transform:scale(0.98)}.btn:disabled{opacity:0.35;cursor:not-allowed}
 .btn.gold{background:var(--gold);color:#1a1400;border-color:var(--gold);font-weight:bold}.btn.gold:hover{background:var(--gold2)}
 .btn.danger{background:var(--red-bg);color:var(--red);border-color:var(--red)}
@@ -145,7 +145,33 @@ input[type=text]:focus{border-color:var(--gold)}
 /* Loot in log */
 .gl-loot-item{display:flex;justify-content:space-between;align-items:center;padding:4px 0;border-bottom:0.5px solid var(--border);font-size:12px}
 .gl-loot-item:last-child{border-bottom:none}
-/* Combat mob card sticky */
+/* Overworld scenes */
+.ow-scene{margin-bottom:16px;padding-bottom:16px;border-bottom:0.5px solid var(--border)}
+.ow-scene:last-child{border-bottom:none}
+.ow-scene-label{font-size:10px;font-family:var(--mono);letter-spacing:1px;color:var(--text3);margin-bottom:8px}
+.ow-scene p{color:var(--text2);margin-bottom:8px;line-height:1.75}
+.ow-scene p.ow-speech{color:var(--text);font-style:italic;padding-left:10px;border-left:2px solid var(--gold)}
+.ow-scene p.ow-comedy{color:var(--gold);font-size:12px;font-family:var(--mono)}
+.ow-scene p.ow-sign{background:var(--bg3);border:0.5px solid var(--border);border-radius:var(--radius);padding:10px 12px;font-size:12px;font-family:var(--mono);color:var(--text2);line-height:1.7}
+.ow-scene p.ow-sign b{color:var(--text)}
+.ow-choices{display:flex;flex-direction:column;gap:8px;margin-top:12px}
+/* Dev menu */
+#dev-trigger-count{display:none}
+.guide-tab{border-color:var(--border)!important}
+.guide-tab.active-tab{background:var(--gold)!important;color:#1a1400!important;border-color:var(--gold)!important;font-weight:bold}
+.guide-section{margin-bottom:14px}
+.guide-section h3{font-size:13px;color:var(--gold2);font-family:var(--mono);letter-spacing:1px;margin-bottom:6px;font-weight:normal;border-bottom:0.5px solid var(--border);padding-bottom:4px}
+.guide-section p{font-size:12px;color:var(--text2);line-height:1.7;margin-bottom:6px}
+.guide-section ul{list-style:none;margin:0;padding:0}
+.guide-section ul li{font-size:12px;color:var(--text2);padding:3px 0;border-bottom:0.5px solid var(--border);line-height:1.6}
+.guide-section ul li:last-child{border-bottom:none}
+.guide-section ul li b{color:var(--text)}
+.guide-tag{display:inline-block;font-size:10px;font-family:var(--mono);padding:1px 6px;border-radius:3px;margin-right:4px}
+.gt-gold{background:var(--gold-bg);color:var(--gold2)}
+.gt-red{background:var(--red-bg);color:var(--red)}
+.gt-green{background:var(--green-bg);color:var(--green)}
+.gt-purple{background:var(--purple-bg);color:var(--purple)}
+.gt-blue{background:var(--blue-bg);color:var(--blue)}
 #combat-mob-card .card{border-color:rgba(201,76,76,0.4);background:var(--bg2)}
 .room-dots{display:flex;gap:6px;align-items:center;margin:6px 0}
 .rdot{width:10px;height:10px;border-radius:50%;background:var(--bg4);border:0.5px solid var(--border2);transition:all 0.3s}
@@ -164,7 +190,7 @@ input[type=text]:focus{border-color:var(--gold)}
 <!-- ═══ TITLE ═══ -->
 <div class="screen active" id="screen-title">
   <div class="card gold-border" style="text-align:center;padding:1.5rem">
-    <div id="title-art"><div style="font-size:11px;letter-spacing:2px;color:var(--text2);font-family:var(--mono);margin-bottom:6px">R E A L M &nbsp; O F</div>
+    <div id="title-art" onclick="devClick()" style="cursor:default"><div style="font-size:11px;letter-spacing:2px;color:var(--text2);font-family:var(--mono);margin-bottom:6px">R E A L M &nbsp; O F</div>
 <div style="font-family:var(--mono);font-size:9px;line-height:1.25;color:var(--gold2);text-shadow:0 0 18px rgba(201,168,76,0.5);white-space:pre;display:inline-block;text-align:left">██╗   ██╗ █████╗ ███████╗██╗     
 ██║   ██║██╔══██╗██╔════╝██║     
 ██║   ██║███████║█████╗  ██║     
@@ -176,6 +202,7 @@ input[type=text]:focus{border-color:var(--gold)}
     <div class="row" style="justify-content:center" id="title-buttons">
       <button class="btn gold" onclick="showScreen('screen-chargen')">Begin Your Legend</button>
       <button class="btn" onclick="showPremium()">✦ Tavern Pass</button>
+      <button class="btn" onclick="showGuide()">📖 Player's Guide</button>
     </div>
     <div id="save-info" style="font-size:11px;color:var(--text2);font-family:var(--mono);margin-top:10px;min-height:16px"></div>
     <div style="font-size:10px;color:var(--text3);font-family:var(--mono);margin-top:4px">v1.2 · Realm of Vael · © 2026</div>
@@ -200,6 +227,7 @@ input[type=text]:focus{border-color:var(--gold)}
     <div class="row">
       <button class="btn" onclick="rollStats()">↺ Reroll</button>
       <button class="btn gold" onclick="beginAdventure()">Enter the Realm</button>
+      <button class="btn" onclick="showGuide()">📖 Guide</button>
     </div>
   </div>
 </div>
@@ -263,11 +291,41 @@ input[type=text]:focus{border-color:var(--gold)}
 </div>
 </div>
 
+<!-- ═══ OVERWORLD ═══ -->
+<div class="screen" id="screen-overworld">
+  <div class="card" id="overworld-panel">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start">
+      <div><h2 id="ow-title">The Road</h2>
+      <div class="sub" id="ow-subtitle"></div></div>
+      <span id="ow-location-badge" style="font-size:10px;font-family:var(--mono);color:var(--text3);padding:3px 8px;border:0.5px solid var(--border);border-radius:3px"></span>
+    </div>
+    <div id="ow-log" style="font-size:13px;line-height:1.8;margin-top:8px"></div>
+  </div>
+</div>
+</div><!-- end #wrap -->
+
+<!-- Dev Menu (Easter Egg) -->
+<div class="modal-bg" id="dev-modal" style="display:none" onclick="if(event.target===this)closeDevMenu()">
+  <div class="modal" style="border-color:var(--purple)">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+      <h2 style="color:var(--purple);margin-bottom:0">⚗ Dev Teleport</h2>
+      <button class="btn sm" onclick="closeDevMenu()">✕</button>
+    </div>
+    <p style="font-size:12px;color:var(--text3);font-family:var(--mono);margin-bottom:12px">Shardknight · Lv3 · post-tomb gear · full HP</p>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <button class="btn gold" onclick="devJump('town')">→ Leaving the Tomb (start of travel)</button>
+      <button class="btn" onclick="devJump('crypt')">→ Departure from Ashenveil (enter Crypts)</button>
+      <button class="btn" onclick="devJump('tomb')">→ The Ashen Tomb (dungeon 1)</button>
+      <button class="btn danger" onclick="closeDevMenu()">Cancel</button>
+    </div>
+  </div>
+</div>
+
 <!-- Sticky action bar — only visible during gameplay -->
 <div id="action-bar" style="display:none;position:fixed;bottom:50px;left:0;right:0;z-index:60;pointer-events:none">
   <div style="max-width:640px;margin:0 auto;padding:0 12px">
-    <div id="explore-actions" style="pointer-events:auto;display:flex;gap:8px;flex-wrap:wrap;background:var(--bg2);border:0.5px solid var(--border);border-radius:12px;padding:10px 12px;box-shadow:0 -4px 16px rgba(0,0,0,0.4)"></div>
-    <div id="action-row"      style="pointer-events:auto;display:flex;gap:8px;flex-wrap:wrap;background:var(--bg2);border:0.5px solid var(--border);border-radius:12px;padding:10px 12px;margin-top:6px;box-shadow:0 -4px 16px rgba(0,0,0,0.4)"></div>
+    <div id="explore-actions" style="pointer-events:auto;display:flex;gap:8px;flex-wrap:wrap;align-items:stretch;background:var(--bg2);border:0.5px solid var(--border);border-radius:12px;padding:10px 12px;box-shadow:0 -4px 16px rgba(0,0,0,0.4)"></div>
+    <div id="action-row"      style="pointer-events:auto;display:flex;gap:8px;flex-wrap:wrap;align-items:stretch;background:var(--bg2);border:0.5px solid var(--border);border-radius:12px;padding:10px 12px;margin-top:6px;box-shadow:0 -4px 16px rgba(0,0,0,0.4)"></div>
   </div>
 </div>
 
@@ -276,6 +334,27 @@ input[type=text]:focus{border-color:var(--gold)}
   <div class="ad-slot" style="margin:0;border-radius:0;min-height:50px">
     <ins class="adsbygoogle" style="display:block;width:100%" data-ad-client="ca-pub-7397461131255887" data-ad-format="auto" data-full-width-responsive="true"></ins>
     <script>(adsbygoogle=window.adsbygoogle||[]).push({});</script>
+  </div>
+</div>
+
+<!-- Player's Guide Modal -->
+<div class="modal-bg" id="guide-modal" style="display:none" onclick="if(event.target===this)closeGuide()">
+  <div class="modal" style="max-width:520px;max-height:85vh;overflow-y:auto">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+      <h2 style="margin-bottom:0">📖 Player's Guide</h2>
+      <button class="btn sm" onclick="closeGuide()">✕ Close</button>
+    </div>
+
+    <!-- Guide tabs -->
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;border-bottom:0.5px solid var(--border);padding-bottom:10px" id="guide-tabs">
+      <button class="btn sm guide-tab active-tab" onclick="showGuideTab('basics')">Basics</button>
+      <button class="btn sm guide-tab" onclick="showGuideTab('combat')">Combat</button>
+      <button class="btn sm guide-tab" onclick="showGuideTab('classes')">Classes</button>
+      <button class="btn sm guide-tab" onclick="showGuideTab('loot')">Loot</button>
+      <button class="btn sm guide-tab" onclick="showGuideTab('dungeon')">Dungeons</button>
+    </div>
+
+    <div id="guide-content"></div>
   </div>
 </div>
 
@@ -998,6 +1077,7 @@ function renderCharPanel(){
       ${gearLine}</div>
       <div style="display:flex;gap:6px">
         <button class="btn sm" onclick="toggleInventory()">Bag</button>
+        <button class="btn sm" onclick="showGuide()">📖</button>
         <button class="btn sm" onclick="showPremium()">✦</button>
       </div>
     </div>
@@ -1068,7 +1148,9 @@ function showToast(msg, duration=3000){
   if(!t){
     t=document.createElement('div');
     t.id='toast';
-    t.style.cssText='position:fixed;bottom:70px;left:50%;transform:translateX(-50%);background:var(--bg3);border:0.5px solid var(--gold);border-radius:8px;padding:8px 16px;font-size:12px;font-family:var(--mono);color:var(--text);z-index:300;pointer-events:none;transition:opacity 0.4s';
+    t.style.cssText='position:fixed;bottom:70px;left:50%;transform:translateX(-50%);background:var(--bg3);border:0.5px solid var(--gold);border-radius:8px;padding:8px 16px;font-size:12px;font-family:var(--mono);color:var(--text);z-index:300;cursor:pointer;transition:opacity 0.4s';
+    t.addEventListener('click',()=>{t.style.opacity='0';clearTimeout(t._timer);});
+    t.addEventListener('touchstart',()=>{t.style.opacity='0';clearTimeout(t._timer);},{passive:true});
     document.body.appendChild(t);
   }
   t.textContent=msg;
@@ -1423,6 +1505,17 @@ function endDungeon(){
   generateLoot();
 }
 
+function afterDungeonNext(){
+  // After dungeon 1 (Ashen Tomb), go to overworld travel scene
+  // After other dungeons, load next dungeon directly
+  if(char.dungeonsCompleted===1){
+    beginOverworld();
+  } else {
+    renderCharPanel();
+    loadAdventure();
+  }
+}
+
 function nextAdventure(){renderCharPanel();loadAdventure();}
 
 // ══════════════════════════════════════════════════════════
@@ -1722,7 +1815,7 @@ function generateLoot(){
   log.appendChild(div);
 
   document.getElementById('explore-actions').innerHTML=`
-    <button class="btn gold" onclick="nextAdventure()">Next Adventure</button>
+    <button class="btn gold" onclick="afterDungeonNext()">Next Adventure</button>
     <button class="btn" onclick="saveAndExit()">&#128190; Save &amp; Exit</button>`;
   document.getElementById('action-row').innerHTML='';
   renderCharPanel();
@@ -1893,6 +1986,521 @@ function deleteHeroConfirmed(){
   initTitleScreen();
   const info=document.getElementById('save-info');
   if(info)info.textContent='Hero deleted. The Realm forgets no one - but it moves on.';
+}
+
+// ══════════════════════════════════════════════════════════
+// OVERWORLD ENGINE
+// ══════════════════════════════════════════════════════════
+
+// Called after dungeon 1 loot screen - start the journey to Ashenveil
+function beginOverworld(){
+  // Overworld gets its own padding treatment
+  showScreen('screen-overworld');
+  document.getElementById('wrap').classList.add('in-game');
+  document.getElementById('action-bar').style.display='block';
+  document.getElementById('sticky-ad').style.display='block';
+  document.getElementById('game-hud').style.display='none'; // no HUD in overworld
+  document.getElementById('ow-log').innerHTML='';
+  owScene_leavingTomb();
+}
+
+function owAppend(html){
+  document.getElementById('ow-log').insertAdjacentHTML('beforeend',html);
+  requestAnimationFrame(syncActionBar);
+}
+
+function owSetHeader(title, subtitle, badge){
+  document.getElementById('ow-title').textContent=title;
+  document.getElementById('ow-subtitle').textContent=subtitle||'';
+  document.getElementById('ow-location-badge').textContent=badge||'';
+}
+
+function owSetActions(html){
+  document.getElementById('explore-actions').innerHTML=html;
+  document.getElementById('action-row').innerHTML='';
+  requestAnimationFrame(syncActionBar);
+}
+
+// ── SCENE 1: LEAVING THE TOMB ──
+function owScene_leavingTomb(){
+  owSetHeader('The Ashen Barrens','Leaving the Tomb','THE ROAD');
+  owAppend(`
+    <div class="ow-scene">
+      <div class="ow-scene-label">THE ASHEN TOMB - EXTERIOR</div>
+      <p>You step out of the tomb into grey daylight, squinting. Behind you, the iron door swings shut of its own accord with a sound like a very long sigh - the kind that suggests the tomb is genuinely relieved to see you go.</p>
+      <p>The Forge shard in your pack pulses once, warmly, then goes quiet. You stand on the hillside in the ash barrens. The air smells of dust and open sky. It is very, very quiet.</p>
+      <p class="ow-comedy">// Note: The birds native to this hillside apparently voted unanimously to relocate some years ago and have not returned.</p>
+      <p>You are alive. This is not nothing. You take a moment to appreciate it, then start walking north toward the road. Your boots leave prints in the ash. Behind you, the tomb leaves no prints at all.</p>
+    </div>`);
+  owSetActions(`<button class="btn gold" onclick="owScene_road()">Take the north road</button>`);
+}
+
+// ── SCENE 2: THE ROAD ──
+function owScene_road(){
+  owAppend(`
+    <div class="ow-scene">
+      <div class="ow-scene-label">THE NORTH ROAD - THREE MILES FROM ASHENVEIL</div>
+      <p>The road north is a rutted dirt track that has seen better decades. Scraggly hedgerows line both sides. Somewhere to the east, a crow is making its feelings known about something.</p>
+      <p>You are halfway to the distant smudge of rooftops that must be Ashenveil when three figures step out of the hedgerow directly in front of you.</p>
+      <p>They are goblins. The one in the center - who is wearing a battered leather tricorn hat with a single bedraggled feather - holds up a hand.</p>
+      <p class="ow-speech">"Halt, traveler!" he announces. "You stand before Dread Warchief Skrix the Terrible, scourge of the northern road, bane of merchants, and general source of significant dread! Surrender your valuables and we may let you pass with only minor inconvenience!"</p>
+      <p>He pauses for effect. His two companions are holding rusty daggers with the body language of people who are deeply uncertain about their recent career choices.</p>
+      <p class="ow-speech">"Skrix," says the one on the left, quietly, "that one has a tomb smell."</p>
+      <p class="ow-speech">"All travelers have a-"</p>
+      <p class="ow-speech">"A tomb smell, Skrix. Like they just came out of a tomb."</p>
+      <p>Skrix the Terrible looks at you more carefully.</p>
+    </div>`);
+  owSetActions(`<button class="btn gold" onclick="owScene_goblinFight()">Take one step toward them</button>`);
+}
+
+// ── SCENE 3: THE GOBLIN ENCOUNTER ──
+function owScene_goblinFight(){
+  owAppend(`
+    <div class="ow-scene">
+      <div class="ow-scene-label">THE NORTH ROAD - HOSTILE ENCOUNTER (SORT OF)</div>
+      <p>You take one step forward.</p>
+      <p>The effect is immediate and comprehensive.</p>
+      <p class="ow-comedy">COMBAT LOG: You step forward. Skrix the Terrible steps backward. Then sideways. Then into the hedgerow at a speed that suggests significant prior practice.</p>
+      <p class="ow-speech">"STRATEGIC REPOSITIONING!" Skrix bellows, from somewhere already quite deep in the undergrowth. "THIS IS A STRATEGIC REPOSITIONING! WE HAVE NOT FLED! WE HAVE REPOSITIONED STRATEGICALLY!"</p>
+      <p>The other two goblins are already gone. You can hear them crashing through the hedgerow in the direction of a nearby hill.</p>
+      <p class="ow-speech">"Tell no one of this!" Skrix adds, more distantly now. "WE WERE NEVER HERE!"</p>
+      <p>The road is empty. A tricorn hat with a bedraggled feather lies in the dust where Skrix was standing. You pick it up. Inside the brim, someone has written <i>"Property of W/C Skrix T. (Terrible) - DO NOT TAKE."</i></p>
+      <p>Three gold coins have fallen out of it.</p>`);
+
+  // Give the player the coins
+  char.gold=(char.gold||0)+3;
+  renderCharPanel();
+
+  owAppend(`
+      <p class="ow-comedy">// You gained 3 gold. You also have a hat now. The hat has no stats. It is simply a hat.</p>
+    </div>`);
+  owSetActions(`<button class="btn gold" onclick="owScene_arriveAshenveil()">Pick up the hat and continue to Ashenveil</button>`);
+}
+
+// ── SCENE 4: ARRIVE IN ASHENVEIL ──
+function owScene_arriveAshenveil(){
+  owSetHeader('Ashenveil','A market town. Nervous, but standing.','TOWN');
+  owAppend(`
+    <div class="ow-scene">
+      <div class="ow-scene-label">ASHENVEIL - TOWN ENTRANCE</div>
+      <p>The town of Ashenveil is announced by a painted wooden sign at the road's edge:</p>
+      <p class="ow-sign"><b>ASHENVEIL</b><br>Est. 847 &nbsp;·&nbsp; Pop. 340 (approx., pending census)<br><br><i style="font-size:11px">Someone has added below this in different handwriting:<br>"Please do not ask about the census taker."</i></p>
+      <p>The town is small but intact - a market square, a well, a blacksmith, a temple to no god in particular, and a tavern. The tavern sign reads "THE RUSTY FLAGON" and beneath it, someone has nailed a plank reading "EST. FINE ALE" in case anyone missed the point.</p>
+      <p>The townspeople who see you arrive display a range of reactions: mild alarm, studied neutrality, and one elderly woman who gives you a long appraising look and says simply, "Tomb," then nods as if confirming something to herself and goes back to her shopping.</p>
+    </div>`);
+  owSetActions(`
+    <button class="btn gold" onclick="owScene_tavern()">Enter the Rusty Flagon</button>
+    <button class="btn" onclick="owScene_bulletinBoard()">Check the bulletin board first</button>`);
+}
+
+// ── SCENE 5: THE TAVERN ──
+function owScene_tavern(){
+  const potCount=inventory.filter(i=>i.type==='consumable').reduce((a,i)=>a+(i.count||1),0);
+  owSetHeader('The Rusty Flagon','Ashenveil\'s finest (and only) tavern.','TAVERN');
+  owAppend(`
+    <div class="ow-scene">
+      <div class="ow-scene-label">THE RUSTY FLAGON - INTERIOR</div>
+      <p>The Rusty Flagon smells of woodsmoke, spilled ale, and the specific kind of worry that has been brewing in a room for several weeks. A fire burns in the hearth. Three farmers sit at a corner table having an argument in hushed, urgent tones.</p>
+      <p>The barkeeper is a stout woman in her fifties with arms like a blacksmith and the expression of someone who has heard every story and been surprised by none of them. She looks at you, looks at the tomb dust still on your boots, and reaches under the bar for a tankard without being asked.</p>
+      <p class="ow-speech">"You've got that look," she says, setting the ale in front of you. "The tomb look. I know it well enough. Been a lot of you coming through lately." She pauses. "Well. Not a lot. More than none, which is more than before."</p>
+      <p>She refills it without comment and leans on the bar.</p>
+      <p class="ow-speech">"Name's Marta. I've run this place for twenty years. I've watched the Undying walk past my window on three separate occasions and I'm still here." A pause. "They never come in, is the thing. I think they find the ambience off-putting."</p>
+      <p>You can hear the farmers arguing behind you.</p>
+      <p class="ow-comedy">Farmer 1: "They can't walk in daylight. That's a fact."<br>Farmer 2: "Edric Marsh's cows went missing at noon last Tenthday."<br>Farmer 1: "Cows go missing."<br>Farmer 2: "Not in a straight line toward the Crypts they don't."</p>
+    </div>`);
+
+  if(char.gold>=1){
+    owAppend(`
+    <div class="ow-scene">
+      <div class="ow-scene-label">RUSTY FLAGON - WHAT WILL YOU DO?</div>
+      <p style="font-size:12px;color:var(--text2);font-family:var(--mono)">HP: ${char.hp}/${char.maxHp} &nbsp;·&nbsp; Gold: ${char.gold} gp &nbsp;·&nbsp; Potions: ${potCount}</p>
+      <p>Marta also keeps a shelf of medicinal supplies behind the bar - "for heroes," she says, "and for farmers who don't know when to stop arguing with fences."</p>
+    </div>`);
+    owSetActions(`
+      <button class="btn gold" onclick="owScene_drinkAle()">Buy an ale (1 gold, 1d4 HP)</button>
+      <button class="btn" onclick="owScene_martaShop()">Browse Marta's supplies</button>
+      <button class="btn" onclick="owScene_bulletinBoard()">Skip it - check the bulletin board</button>`);
+  } else {
+    owAppend(`<p class="ow-comedy">You check your coin pouch. You are, embarrassingly, broke. Marta notices and slides a bread roll across the bar. "On the house," she says. "You look like you need it."</p>`);
+    owSetActions(`<button class="btn gold" onclick="owScene_bulletinBoard()">Head to the bulletin board</button>`);
+  }
+}
+
+// ── SCENE 5b: DRINK THE ALE ──
+function owScene_drinkAle(){
+  char.gold-=1;
+  const healRoll=rollDie(4);
+  const was=char.hp;
+  char.hp=Math.min(char.maxHp,char.hp+healRoll);
+  const got=char.hp-was;
+  renderCharPanel();
+  owAppend(`
+    <div class="ow-scene">
+      <div class="ow-scene-label">ONE ALE, RUSTY FLAGON</div>
+      <p>The ale is dark, slightly warm, and tastes faintly of peat and better times. You drink it. ${got>0?`You feel ${got} HP worth of better about everything.`:'You are already in peak condition. The ale is still good.'}</p>
+      <p class="ow-speech">"The Undying," Marta says, unprompted, polishing a tankard, "are real bastards. I don't care what the temple says about them being 'tragically displaced souls.' They knocked over my rain barrel last Firstday and did not apologize."</p>
+      <p>She sets the tankard down with more force than strictly necessary.</p>
+      <p class="ow-speech">"Mayor Prentwick's put a notice up. On the board outside." She nods toward the door. "Fifty gold and a certificate. Not that the certificate is worth anything, but Prentwick had them printed special, so."</p>
+      <p class="ow-comedy">// ${got>0?`Recovered ${got} HP.`:''} Spent 1 gold. Gained useful local intelligence and a warm feeling.</p>
+    </div>`);
+  owSetActions(`<button class="btn gold" onclick="owScene_bulletinBoard()">Check the bulletin board</button>`);
+}
+
+// ── SCENE 5c: MARTA'S SHOP ──
+function owScene_martaShop(){
+  const potPrice=8;
+  const greaterPrice=25;
+  const canAffordPot=char.gold>=potPrice;
+  const canAffordGreater=char.gold>=greaterPrice;
+  const potCount=inventory.filter(i=>i.type==='consumable').reduce((a,i)=>a+(i.count||1),0);
+  owAppend(`
+    <div class="ow-scene">
+      <div class="ow-scene-label">RUSTY FLAGON - MARTA'S SUPPLIES</div>
+      <p>Marta produces a wooden box from under the bar and sets it on the counter with the air of someone revealing a state secret. Inside are several stoppered bottles, neatly labeled in a handwriting that suggests she takes this seriously.</p>
+      <p class="ow-speech">"Brewed them myself," she says. "Old family recipe. My grandmother was a hedge-witch, which the temple found alarming and I find useful." She taps the box. "They work. That's all I'll say."</p>
+      <div style="background:var(--bg3);border:0.5px solid var(--border);border-radius:var(--radius);padding:10px 12px;margin:8px 0;font-size:12px">
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:0.5px solid var(--border)">
+          <div><b style="color:var(--text)">Health Potion</b><br><span style="color:var(--text2)">Restores 10 HP</span></div>
+          <div style="display:flex;gap:8px;align-items:center">
+            <span style="color:var(--gold);font-family:var(--mono)">${potPrice} gp</span>
+            <button class="btn sm" onclick="owBuyPotion(${potPrice},'Health Potion',10,'common')" ${canAffordPot?'':'disabled'}>${canAffordPot?'Buy':'Need '+potPrice+' gp'}</button>
+          </div>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0">
+          <div><b style="color:var(--text)">Greater Potion</b><br><span style="color:var(--text2)">Restores 25 HP</span></div>
+          <div style="display:flex;gap:8px;align-items:center">
+            <span style="color:var(--gold);font-family:var(--mono)">${greaterPrice} gp</span>
+            <button class="btn sm" onclick="owBuyPotion(${greaterPrice},'Greater Potion',25,'uncommon')" ${canAffordGreater?'':'disabled'}>${canAffordGreater?'Buy':'Need '+greaterPrice+' gp'}</button>
+          </div>
+        </div>
+      </div>
+      <p style="font-size:11px;color:var(--text3);font-family:var(--mono)">Gold: ${char.gold} gp &nbsp;·&nbsp; Potions in bag: ${potCount}</p>
+    </div>`);
+  owSetActions(`
+    <button class="btn gold" onclick="owScene_bulletinBoard()">Check the bulletin board</button>
+    <button class="btn" onclick="owScene_drinkAle()">Have an ale while you're here (1 gp)</button>`);
+}
+
+function owBuyPotion(cost, name, val, rarity){
+  if(char.gold<cost){showToast('Not enough gold.');return;}
+  char.gold-=cost;
+  const exist=inventory.find(i=>i.name===name&&i.type==='consumable');
+  if(exist) exist.count=(exist.count||1)+1;
+  else inventory.push({name,type:'consumable',stat:'HP',val,rarity,count:1});
+  renderCharPanel();
+  showToast(name+' purchased! ('+char.gold+' gp remaining)');
+  owScene_martaShop(); // refresh shop with updated gold/count
+}
+function owScene_bulletinBoard(){
+  owSetHeader('The Bulletin Board','Market square, Ashenveil.','NOTICE');
+  owAppend(`
+    <div class="ow-scene">
+      <div class="ow-scene-label">ASHENVEIL MARKET SQUARE - PUBLIC NOTICES</div>
+      <p>The bulletin board in the market square is a weathered oak frame mounted to the well housing. It holds several notices: a lost goat (answers to "Bramble," reward of two copper), a reminder that the well rota has not changed and Henwick family you know who you are, and one notice that has been pinned with significantly more nails than the others.</p>
+      <p class="ow-sign">
+        <b>HERO WANTED - EXTREMELY URGENTLY</b><br><br>
+        The Grimhallow Crypts, located approximately two miles north of Ashenveil (you cannot miss them, unfortunately, as they are the hill with no trees on it, which stands out), have become a matter of significant civic concern.<br><br>
+        The Undying who reside therein have begun making nocturnal appearances in the market square, disrupting commerce and frightening livestock. Three incidents in the past fortnight. One of them knocked over the rain barrel outside the Rusty Flagon.<br><br>
+        A reward of <b>50 GOLD</b> and a <b>CERTIFICATE OF CIVIC APPRECIATION</b> is offered to any qualified hero willing to resolve this situation.<br><br>
+        Certificate frame not included. Frame available at cost from Prentwick's Fine Butchery.<br><br>
+        Please inquire within. Or at the butcher shop. They are, as of this year, the same building.<br><br>
+        <i>- Mayor Aldous Prentwick<br>
+        Also: Prentwick's Fine Butchery, Est. 862<br>
+        "Quality Cuts, Civic Pride"</i>
+      </p>
+      <p>Below the notice, someone has added in pencil: <i>"The certificate is very nice actually. Prentwick had them gilded."</i></p>
+      <p>And below that, in a different hand: <i>"Fifty gold barely covers funeral expenses. Just saying."</i></p>
+      <p>And below that, in what appears to be Prentwick's own handwriting: <i>"Please stop defacing the notice. - A.P."</i></p>
+    </div>`);
+  owSetActions(`
+    <button class="btn gold" onclick="owScene_acceptJob()">Accept the job</button>
+    <button class="btn" onclick="owScene_tavern()">Go back for another ale first</button>`);
+}
+
+// ── SCENE 7: ACCEPT THE JOB ──
+function owScene_acceptJob(){
+  owSetHeader('Leaving Ashenveil','Northward. Toward the Crypts.','DEPARTURE');
+  owAppend(`
+    <div class="ow-scene">
+      <div class="ow-scene-label">THE RUSTY FLAGON - FAREWELL</div>
+      <p>You stop back at the Rusty Flagon on your way out. Marta sees you with your pack settled and your weapon at your hip and nods once.</p>
+      <p>She refills your tankard and slides it across the bar. You reach for your coin pouch.</p>
+      <p class="ow-speech">"On the house," she says. "In case you don't come back."</p>
+      <p>A pause.</p>
+      <p class="ow-speech">"That came out wrong. I meant - good luck." Another pause. "The Undying are real bastards. Don't let anyone tell you different."</p>
+      <p>You drink the ale. It is, if anything, better than the first one.</p>
+    </div>
+    <div class="ow-scene">
+      <div class="ow-scene-label">THE NORTH ROAD - TWO MILES TO THE CRYPTS</div>
+      <p>You leave Ashenveil as the sun begins its descent. The road north is empty - the goblins have not returned, though you notice fresh scuff marks in the dust where someone recently ran through at considerable speed. The hat in your pack sits comfortably.</p>
+      <p>The Grimhallow Crypts announce themselves before you see them. The hill appears on the horizon like an absence - no trees, no birds, no movement. Just a low dark mound against the evening sky with one stone archway visible at its base.</p>
+      <p>You have been in tombs before. This one is different, and you know it before you arrive. The air smells different. Not of ash and old death. Of something older. Something that has been awake for a very long time and has grown accustomed to waiting.</p>
+      <p>The archway is carved with names. Thousands of them. All in the same hand. Written very, very small.</p>
+    </div>`);
+  owSetActions(`<button class="btn gold" onclick="startCryptsDungeon()">Enter the Grimhallow Crypts</button>`);
+}
+
+// ── TRANSITION TO DUNGEON 2 ──
+function startCryptsDungeon(){
+  showScreen('screen-game');
+  document.getElementById('wrap').classList.add('in-game');
+  document.getElementById('game-hud').style.display='block';
+  adventureNum=1; // set to 1 so loadAdventure increments to 2 (index 1 = Grimhallow)
+  loadAdventure();
+}
+
+// ── DEV EASTER EGG ──
+// Triggered by clicking the title VAEL art 5 times
+let devClickCount=0;
+let devClickTimer=null;
+
+function devClick(){
+  devClickCount++;
+  clearTimeout(devClickTimer);
+  devClickTimer=setTimeout(()=>{devClickCount=0;},2000);
+  if(devClickCount>=5){
+    devClickCount=0;
+    document.getElementById('dev-modal').style.display='flex';
+  }
+}
+
+function closeDevMenu(){
+  document.getElementById('dev-modal').style.display='none';
+}
+
+function devBuildChar(){
+  // Build a level 3 Shardknight with post-tomb gear
+  selectedClass=FREE_CLASSES.find(c=>c.id==='paladin');
+  rolledStats={STR:18,DEX:10,CON:14,INT:10,WIS:13,CHA:12};
+  const maxHp=selectedClass.hpBase*2+mod(14)+rollDie(selectedClass.hpBase)+rollDie(selectedClass.hpBase)+rollDie(selectedClass.hpBase); // ~3 level-ups
+  char={
+    name:'Shardly Wiplash',cls:selectedClass,
+    stats:{STR:18,DEX:10,CON:14,INT:10,WIS:13,CHA:12},
+    maxHp:Math.max(maxHp,45),hp:Math.max(maxHp,45),
+    xp:450,level:3,gold:180,
+    bossesDefeated:1,dungeonsCompleted:1,title:null,
+    abilityUsed:false,shadowstepActive:false,bardStunActive:false,defendStance:false
+  };
+  inventory=[
+    {name:'Vaelite Sword',  type:'weapon',  stat:'ATK',rarity:'epic',   val:9, count:1},
+    {name:'Thornwood Mail', type:'armor',   stat:'DEF',rarity:'uncommon',val:6, count:1},
+    {name:'Ring of Osserath',type:'accessor',stat:'STR',rarity:'rare',  val:5, count:1},
+    {name:'Health Potion',  type:'consumable',stat:'HP',rarity:'common', val:10,count:4},
+    {name:'Greater Potion', type:'consumable',stat:'HP',rarity:'uncommon',val:25,count:1},
+  ];
+}
+
+function devJump(dest){
+  closeDevMenu();
+  devBuildChar();
+  if(dest==='town'){
+    showScreen('screen-overworld');
+    document.getElementById('wrap').classList.add('in-game');
+    document.getElementById('action-bar').style.display='block';
+    document.getElementById('sticky-ad').style.display='block';
+    document.getElementById('game-hud').style.display='none';
+    document.getElementById('ow-log').innerHTML='';
+    owScene_leavingTomb(); // start from the beginning of travel
+  } else if(dest==='crypt'){
+    showScreen('screen-overworld');
+    document.getElementById('wrap').classList.add('in-game');
+    document.getElementById('action-bar').style.display='block';
+    document.getElementById('sticky-ad').style.display='block';
+    document.getElementById('game-hud').style.display='none';
+    document.getElementById('ow-log').innerHTML='';
+    owScene_acceptJob(); // start at departure from town - ends with Enter Crypts button
+  } else if(dest==='tomb'){
+    showScreen('screen-game');
+    document.getElementById('wrap').classList.add('in-game');
+    document.getElementById('game-hud').style.display='block';
+    adventureNum=0;
+    loadAdventure();
+  }
+}
+
+// ── PLAYER'S GUIDE ──
+const GUIDE_CONTENT = {
+  basics:`
+    <div class="guide-section">
+      <h3>WHAT IS REALM OF VAEL?</h3>
+      <p>Realm of Vael is a dungeon-crawl RPG set in a world shattered by the destruction of the Eternal Forge. You create a hero, descend through multi-floor dungeons, fight enemies, collect loot, and grow stronger with each run.</p>
+    </div>
+    <div class="guide-section">
+      <h3>THE SIX ATTRIBUTES</h3>
+      <ul>
+        <li><b>STR</b> - Strength. Adds to attack damage and hit rolls. Your primary combat stat.</li>
+        <li><b>DEX</b> - Dexterity. Improves dodge chance and helps Rogues and Rangers hit harder.</li>
+        <li><b>CON</b> - Constitution. Increases max HP and reduces incoming damage. Critical for survival.</li>
+        <li><b>INT</b> - Intelligence. Powers Mage and Ashbinder abilities. Boosts spell damage.</li>
+        <li><b>WIS</b> - Wisdom. Fuels Cleric and Paladin healing. Improves Ranger awareness.</li>
+        <li><b>CHA</b> - Charisma. Powers the Shard Singer. Occasionally opens dialogue options.</li>
+      </ul>
+    </div>
+    <div class="guide-section">
+      <h3>ATTRIBUTE MODIFIERS</h3>
+      <p>Each attribute has a modifier shown below it. A 10 gives +0, every 2 points above or below shifts the modifier by 1. So 14 STR gives +2, 8 CON gives -1. Modifiers are what actually affect combat - not the raw number.</p>
+    </div>
+    <div class="guide-section">
+      <h3>LEVELING UP</h3>
+      <p>Earn XP by defeating enemies. Your XP requirement grows exponentially - the first few levels come quickly, but higher levels require clearing many dungeons. Each level grants bonus HP and slightly improves your combat effectiveness. Your miss threshold also decreases as you level, making you more accurate over time.</p>
+    </div>
+    <div class="guide-section">
+      <h3>GOLD</h3>
+      <p>Gold drops from every enemy and doubles from bosses. Use it to buy Health Potions from the Traveling Merchant at floor transitions and after dungeon completion. Inferior gear you pick up is auto-sold for gold rather than cluttering your bag.</p>
+    </div>`,
+
+  combat:`
+    <div class="guide-section">
+      <h3>COMBAT ACTIONS</h3>
+      <ul>
+        <li><b>Attack</b> - Roll d20 + STR modifier. If it beats the miss threshold, deal d8 + STR + weapon bonus damage. Natural 20 is a critical hit (add d6 bonus damage).</li>
+        <li><b>Defend</b> - Incoming damage is halved this round. You gain a +2 attack bonus on your very next Attack action (shown as <span class="guide-tag gt-gold">Attack [+2]</span>). Tanky classes (Warrior, Paladin, Cleric) also recover 1d4 + half-level HP. The stance expires if you use any other action before attacking.</li>
+        <li><b>Potion</b> - Drink a Health Potion for 10 HP (Greater Potion restores 25 HP). Counts as your action; the enemy still attacks. Blocked if you are already at full health.</li>
+        <li><b>Class Ability</b> - Unique to your class. Usable once per room, resets each new room. See the Classes tab for details.</li>
+        <li><b>Flee</b> - Roll d6 + DEX modifier. On a 4+ you escape. On a fail, the enemy attacks and you remain in combat.</li>
+      </ul>
+    </div>
+    <div class="guide-section">
+      <h3>ENEMY TURN</h3>
+      <p>After every action you take, the enemy attacks. Roll d20 + DEX to dodge - a 18 or higher is a successful dodge. Otherwise the enemy deals d6 + ATK damage, reduced by your CON modifier and armor DEF bonus (1 point per 4 DEF). Defending also reduces the enemy hit by 1.</p>
+    </div>
+    <div class="guide-section">
+      <h3>CRITICAL HITS</h3>
+      <p>When your attack roll (d20 + STR) is 20 or higher, you score a critical hit and add an extra d6 to your damage. The +2 stance bonus from Defend can push you into critical range more reliably.</p>
+    </div>
+    <div class="guide-section">
+      <h3>BETWEEN ROOMS</h3>
+      <p>After each combat room clears, you can Rest to recover roughly 12% of max HP, or press on immediately. Your class ability also resets between rooms, so you always enter a new fight fresh.</p>
+    </div>
+    <div class="guide-section">
+      <h3>FLOOR TRANSITIONS</h3>
+      <p>Moving between floors gives a larger rest (20% HP at F1-F2, 30% at F2-F3), access to the Traveling Merchant to buy potions, and a chance to save your progress. Your class ability resets here too.</p>
+    </div>
+    <div class="guide-section">
+      <h3>USING POTIONS OUTSIDE COMBAT</h3>
+      <p>Tap the <span class="guide-tag gt-green">🧪 ×N</span> button on the HP bar or the HUD at the top of the screen to drink a potion any time outside combat. Blocked at full health to avoid waste.</p>
+    </div>`,
+
+  classes:`
+    <div class="guide-section">
+      <h3>FREE CLASSES</h3>
+      <ul>
+        <li><b>⚔ Ironbound Warrior</b> <span class="guide-tag gt-gold">STR</span><span class="guide-tag gt-blue">CON</span> - High HP, straightforward damage dealer. <i>Second Wind:</i> Recover level×4 + CON modifier HP. Best for new players.</li>
+        <li><b>🜂 Forge Mage</b> <span class="guide-tag gt-purple">INT</span> - Fragile but powerful. <i>Shard Drain:</i> Deal INT modifier + d4 damage AND recover the same amount as HP. Scales with INT investment.</li>
+        <li><b>🗝 Shadow Cur</b> <span class="guide-tag gt-blue">DEX</span> - Fast and evasive. <i>Shadowstep:</i> Deal DEX + STR modifier damage and auto-dodge the next enemy attack. High dodge rate naturally.</li>
+        <li><b>✦ Ashen Priest</b> <span class="guide-tag gt-gold">WIS</span> - Healer and support. <i>Shardlight:</i> Recover WIS modifier × 5 + level × 2 HP. Best healing ability in the game.</li>
+        <li><b>🏹 Barren Scout</b> <span class="guide-tag gt-blue">DEX</span><span class="guide-tag gt-gold">WIS</span> - Balanced precision. <i>Survivalist:</i> Recover WIS modifier × 3 + DEX modifier × 2 + 4 HP. Good dodge rate and accuracy.</li>
+        <li><b>🛡 Shardknight</b> <span class="guide-tag gt-gold">STR</span><span class="guide-tag gt-blue">CON</span> - Tank with healing. <i>Lay on Hands:</i> Recover WIS modifier × 4 + CON modifier × 3 + 6 HP. Defend also restores HP. Great all-rounder.</li>
+      </ul>
+    </div>
+    <div class="guide-section">
+      <h3>TAVERN PASS CLASSES</h3>
+      <ul>
+        <li><b>💀 Ashbinder</b> <span class="guide-tag gt-purple">INT</span><span class="guide-tag gt-gold">WIS</span> - Death magic. <i>Death Coil:</i> Drain life from the enemy - deal INT modifier + d6 damage and absorb it as HP.</li>
+        <li><b>🌿 Thornwarden</b> <span class="guide-tag gt-gold">WIS</span> - Nature magic. <i>Thornmend:</i> Recover WIS modifier × 5 + 6 HP from the living wood.</li>
+        <li><b>🎵 Shard Singer</b> <span class="guide-tag gt-gold">CHA</span> - Support. <i>Resonance:</i> Recover CHA modifier × 4 + 5 HP and stun the enemy so they miss their next attack.</li>
+      </ul>
+    </div>
+    <div class="guide-section">
+      <h3>CLASS ABILITY RULES</h3>
+      <p>Every class ability resets at the start of each new combat room - you always get one use per room. Abilities also reset at floor transitions. Using a Potion or Ability instead of attacking after a Defend will waste the +2 stance bonus.</p>
+    </div>`,
+
+  loot:`
+    <div class="guide-section">
+      <h3>GEAR SLOTS</h3>
+      <ul>
+        <li><b>Weapon</b> <span class="guide-tag gt-gold">ATK bonus</span> - Adds half its ATK value to your attack damage. Higher is better. Auto-equips the best one you own.</li>
+        <li><b>Armor</b> <span class="guide-tag gt-blue">DEF bonus</span> - Reduces incoming damage by 1 point per 4 DEF. Auto-equips the best piece.</li>
+        <li><b>Accessory</b> <span class="guide-tag gt-purple">Stat bonus</span> - Rings and amulets that boost STR, CON, INT, etc. Auto-equips best one.</li>
+      </ul>
+    </div>
+    <div class="guide-section">
+      <h3>AUTO-EQUIP SYSTEM</h3>
+      <p>You never need to manually equip gear. When you pick up something better than what you have, it equips automatically. If it is weaker, it is sold for gold on the spot. Open the Bag to see your currently equipped items highlighted in gold, blue, and purple borders.</p>
+    </div>
+    <div class="guide-section">
+      <h3>RARITY TIERS</h3>
+      <ul>
+        <li><span class="guide-tag" style="background:var(--bg4);color:var(--text2)">common</span> - Base items. Solid but unremarkable.</li>
+        <li><span class="guide-tag gt-green">uncommon</span> - Noticeably better stats. Worth holding.</li>
+        <li><span class="guide-tag gt-blue">rare</span> - Strong items that meaningfully change your power level.</li>
+        <li><span class="guide-tag gt-purple">epic</span> - Excellent items. If you find one, use it.</li>
+        <li><span class="guide-tag gt-gold">legendary</span> - The best items in the game. Very rare drops from bosses and final floors.</li>
+      </ul>
+    </div>
+    <div class="guide-section">
+      <h3>POTIONS</h3>
+      <ul>
+        <li><b>Health Potion</b> - Restores 10 HP. Common. Drops frequently, available from the Merchant.</li>
+        <li><b>Greater Potion</b> - Restores 25 HP. Uncommon. Can only be found as loot, not purchased.</li>
+      </ul>
+    </div>
+    <div class="guide-section">
+      <h3>DROP SOURCES</h3>
+      <ul>
+        <li><b>Regular enemies</b> - 25% chance of a Health Potion, 35% chance of a random gear drop.</li>
+        <li><b>Mini-bosses</b> - Guaranteed Health Potion + guaranteed uncommon or better gear drop.</li>
+        <li><b>Final boss</b> - 2-4 gear drops from the full loot table, weighted toward higher rarities.</li>
+        <li><b>Merchant</b> - Health Potions for gold at floor transitions and after dungeon completion. Price rises with your level.</li>
+      </ul>
+    </div>`,
+
+  dungeon:`
+    <div class="guide-section">
+      <h3>DUNGEON STRUCTURE</h3>
+      <p>Each dungeon has 3 floors of 5 rooms each - 15 rooms total. Every floor ends with a named mini-boss (floors 1 and 2) or the main boss (floor 3).</p>
+      <ul>
+        <li><b>Floor 1</b> - Enemies at 65% strength. Learning the dungeon's atmosphere and layout. Mini-boss guards the descent.</li>
+        <li><b>Floor 2</b> - Enemies at full strength. The real challenge begins. Second mini-boss is significantly harder than the first.</li>
+        <li><b>Floor 3</b> - Full strength enemies plus the main boss. No retreat after you descend.</li>
+      </ul>
+    </div>
+    <div class="guide-section">
+      <h3>ROOM TYPES</h3>
+      <ul>
+        <li><b>Exploration</b> - Narrative only. No combat. Read, then press on.</li>
+        <li><b>Combat Room</b> - Fight 1-2 enemies. Rest and possibly find loot after clearing.</li>
+        <li><b>Mini-boss</b> - Named enemy with more HP and damage. Drops a guaranteed potion and gear on death.</li>
+        <li><b>Boss Chamber</b> - The dungeon's main antagonist. Hardest fight in the dungeon. Completing it ends the dungeon and triggers the loot screen.</li>
+      </ul>
+    </div>
+    <div class="guide-section">
+      <h3>THE MAP</h3>
+      <p>The dungeon map is collapsed by default. Tap the <b>▼ Map</b> button in the dungeon header to expand it and see the full layout with room labels. The progress dots below the map show which room you are in and how far through the dungeon you have come.</p>
+    </div>
+    <div class="guide-section">
+      <h3>SAVING</h3>
+      <p>The game auto-saves after every loot screen and every between-room rest. You can also manually save at any floor transition using the Save button, or tap <b>💾 Exit</b> in the dungeon header to save and return to the main menu. Loading a save resumes at the start of the room you saved in.</p>
+    </div>
+    <div class="guide-section">
+      <h3>DUNGEON LIST</h3>
+      <ul>
+        <li><b>The Ashen Tomb</b> - Undead and ancient wardens. The First Shardkeeper sleeps - or did.</li>
+        <li><b>Grimhallow Crypts</b> - The Undying and their Patriarch Osserath. The dead outnumber the living here.</li>
+        <li><b>The Frostbitten Keep</b> - A frozen fortress where two armies died mid-battle and keep fighting.</li>
+        <li><b>Thornwood Sanctum</b> - A forest that remembers everything. Morveth the Rooted has not moved in three centuries.</li>
+        <li><b>The Sunken Citadel</b> - A drowned fortress at the bottom of a cursed lake. Admiral Drael is still at his post.</li>
+        <li><b>Vael's Cradle</b> - The Eternal Forge itself. Vaelundra the Unbound awaits at the deepest level.</li>
+      </ul>
+    </div>`,
+};
+
+function showGuide(tab){
+  document.getElementById('guide-modal').style.display='flex';
+  showGuideTab(tab||'basics');
+}
+
+function closeGuide(){
+  document.getElementById('guide-modal').style.display='none';
+}
+
+function showGuideTab(tab){
+  document.getElementById('guide-content').innerHTML=GUIDE_CONTENT[tab]||'';
+  document.querySelectorAll('.guide-tab').forEach(b=>{
+    b.classList.toggle('active-tab', b.getAttribute('onclick').includes("'"+tab+"'"));
+  });
+  document.getElementById('guide-modal').querySelector('.modal').scrollTop=0;
 }
 
 function showPremium(){document.getElementById('premium-modal').style.display='flex';}
