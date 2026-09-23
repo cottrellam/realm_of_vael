@@ -20,7 +20,8 @@
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:100vh;font-size:15px;line-height:1.6}
-#wrap{max-width:640px;margin:0 auto;padding:48px 12px 280px}
+#wrap{max-width:640px;margin:0 auto;padding:12px}
+#wrap.in-game{padding-top:48px;padding-bottom:280px}
 .screen{display:none}.screen.active{display:block}
 .ad-slot{background:var(--bg2);border:0.5px dashed var(--border2);border-radius:var(--radius);padding:8px;text-align:center;color:var(--text3);font-size:11px;font-family:var(--mono);margin:8px 0;min-height:60px;display:flex;align-items:center;justify-content:center}
 .card{background:var(--bg2);border:0.5px solid var(--border);border-radius:12px;padding:1rem 1.25rem;margin-bottom:10px}
@@ -261,8 +262,8 @@ input[type=text]:focus{border-color:var(--gold)}
 </div>
 </div>
 
-<!-- Sticky action bar — sits above the ad, always visible -->
-<div id="action-bar" style="position:fixed;bottom:50px;left:0;right:0;z-index:60;pointer-events:none">
+<!-- Sticky action bar — only visible during gameplay -->
+<div id="action-bar" style="display:none;position:fixed;bottom:50px;left:0;right:0;z-index:60;pointer-events:none">
   <div style="max-width:640px;margin:0 auto;padding:0 12px">
     <div id="explore-actions" style="pointer-events:auto;display:flex;gap:8px;flex-wrap:wrap;background:var(--bg2);border:0.5px solid var(--border);border-radius:12px;padding:10px 12px;box-shadow:0 -4px 16px rgba(0,0,0,0.4)"></div>
     <div id="action-row"      style="pointer-events:auto;display:flex;gap:8px;flex-wrap:wrap;background:var(--bg2);border:0.5px solid var(--border);border-radius:12px;padding:10px 12px;margin-top:6px;box-shadow:0 -4px 16px rgba(0,0,0,0.4)"></div>
@@ -270,7 +271,7 @@ input[type=text]:focus{border-color:var(--gold)}
 </div>
 
 <!-- Sticky ad -->
-<div style="position:fixed;bottom:0;left:0;right:0;background:var(--bg2);border-top:0.5px solid var(--border);z-index:50">
+<div id="sticky-ad" style="display:none;position:fixed;bottom:0;left:0;right:0;background:var(--bg2);border-top:0.5px solid var(--border);z-index:50">
   <div class="ad-slot" style="margin:0;border-radius:0;min-height:50px">
     <ins class="adsbygoogle" style="display:block;width:100%" data-ad-client="ca-pub-7397461131255887" data-ad-format="auto" data-full-width-responsive="true"></ins>
     <script>(adsbygoogle=window.adsbygoogle||[]).push({});</script>
@@ -792,7 +793,16 @@ function renderStatGrid(){
 function showScreen(id){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
-  document.getElementById('game-hud').style.display=id==='screen-game'?'block':'none';
+  const inGame=id==='screen-game';
+  // HUD only during gameplay
+  document.getElementById('game-hud').style.display=inGame?'block':'none';
+  // Action bar only during gameplay
+  document.getElementById('action-bar').style.display=inGame?'block':'none';
+  // Sticky ad only during gameplay (prevents it covering title/chargen on mobile)
+  const stickyAd=document.getElementById('sticky-ad');
+  if(stickyAd) stickyAd.style.display=inGame?'block':'none';
+  // Extra padding only during gameplay
+  document.getElementById('wrap').classList.toggle('in-game', inGame);
   window.scrollTo(0,0);
 }
 
