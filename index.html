@@ -1,0 +1,1892 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Realm of Vael</title>
+<meta name="description" content="Realm of Vael - a classic dungeon-crawl RPG. Roll your hero, explore cursed dungeons, and claim legendary loot.">
+<!-- AdSense - uncomment and replace publisher ID:
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
+-->
+<style>
+:root{
+  --bg:#0d0f14;--bg2:#141720;--bg3:#1c2030;--bg4:#232840;
+  --border:rgba(255,255,255,0.08);--border2:rgba(255,255,255,0.15);
+  --gold:#c9a84c;--gold2:#e8c96a;--gold-bg:rgba(201,168,76,0.12);
+  --red:#c94c4c;--red-bg:rgba(201,76,76,0.12);
+  --green:#4cad6e;--green-bg:rgba(76,173,110,0.12);
+  --blue:#4c7ec9;--blue-bg:rgba(76,126,201,0.12);
+  --purple:#9b6bd4;--purple-bg:rgba(155,107,212,0.12);
+  --text:#e8e4d8;--text2:#a09880;--text3:#6a6050;
+  --radius:8px;--font:'Georgia','Times New Roman',serif;--mono:'Courier New',monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:100vh;font-size:15px;line-height:1.6}
+#wrap{max-width:640px;margin:0 auto;padding:48px 12px 280px}
+.screen{display:none}.screen.active{display:block}
+.ad-slot{background:var(--bg2);border:0.5px dashed var(--border2);border-radius:var(--radius);padding:8px;text-align:center;color:var(--text3);font-size:11px;font-family:var(--mono);margin:8px 0;min-height:60px;display:flex;align-items:center;justify-content:center}
+.card{background:var(--bg2);border:0.5px solid var(--border);border-radius:12px;padding:1rem 1.25rem;margin-bottom:10px}
+.card.gold-border{border-color:var(--gold)}
+.card h2{font-size:20px;font-weight:normal;color:var(--gold2);letter-spacing:0.5px;margin-bottom:2px}
+.card .sub{font-size:12px;color:var(--text2);margin-bottom:10px;font-family:var(--mono)}
+.lore{font-size:13px;color:var(--text2);line-height:1.7;border-left:2px solid var(--gold);padding-left:10px;margin:8px 0 12px;font-style:italic}
+.section-label{font-size:11px;font-family:var(--mono);color:var(--text3);letter-spacing:1px;margin:14px 0 6px}
+.btn{background:transparent;border:0.5px solid var(--border2);border-radius:var(--radius);padding:9px 18px;font-family:var(--font);font-size:13px;color:var(--text);cursor:pointer;transition:all 0.15s}
+.btn:hover{background:var(--bg3)}.btn:active{transform:scale(0.98)}.btn:disabled{opacity:0.35;cursor:not-allowed}
+.btn.gold{background:var(--gold);color:#1a1400;border-color:var(--gold);font-weight:bold}.btn.gold:hover{background:var(--gold2)}
+.btn.danger{background:var(--red-bg);color:var(--red);border-color:var(--red)}
+.btn.sm{padding:6px 12px;font-size:12px}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+
+/* Class grid */
+.class-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:6px 0}
+.class-card{background:var(--bg3);border:0.5px solid var(--border);border-radius:var(--radius);padding:10px 6px;cursor:pointer;text-align:center;transition:all 0.15s;position:relative}
+.class-card:hover{border-color:var(--gold)}
+.class-card.selected{border-color:var(--gold);background:var(--gold-bg)}
+.class-card .cc-icon{font-size:22px;margin-bottom:3px}
+.class-card .cc-name{font-size:12px;font-weight:bold;color:var(--text)}
+.class-card .cc-desc{font-size:10px;color:var(--text2);font-family:var(--mono)}
+.class-card .cc-lock{position:absolute;top:4px;right:4px;font-size:10px;color:var(--gold);font-family:var(--mono)}
+
+/* Tooltip */
+.tooltip-box{position:fixed;background:var(--bg2);border:0.5px solid var(--gold);border-radius:10px;padding:12px 14px;max-width:260px;font-size:12px;line-height:1.6;z-index:200;pointer-events:none;display:none;box-shadow:0 8px 24px rgba(0,0,0,0.6)}
+.tooltip-box h3{font-size:14px;color:var(--gold2);margin-bottom:4px;font-weight:normal}
+.tooltip-box .tt-flavor{color:var(--text2);font-style:italic;margin-bottom:8px;font-size:11px}
+.tooltip-box .tt-stat{display:flex;justify-content:space-between;padding:2px 0;border-bottom:0.5px solid var(--border);font-size:11px;font-family:var(--mono)}
+.tooltip-box .tt-stat:last-child{border-bottom:none}
+.tooltip-box .tt-stat .sname{color:var(--gold)}
+.tooltip-box .tt-stat .swhy{color:var(--text2);font-size:10px;font-style:italic}
+
+/* Stats */
+.stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:6px 0}
+.stat-box{background:var(--bg3);border:0.5px solid var(--border);border-radius:var(--radius);padding:8px;text-align:center}
+.stat-box .sn{font-size:10px;color:var(--text3);font-family:var(--mono);letter-spacing:1px}
+.stat-box .sv{font-size:20px;color:var(--text)}
+.stat-box .sm{font-size:11px;color:var(--text2);font-family:var(--mono)}
+input[type=text]{width:100%;padding:9px 12px;border:0.5px solid var(--border);border-radius:var(--radius);background:var(--bg3);color:var(--text);font-family:var(--font);font-size:14px;margin-bottom:6px;outline:none}
+input[type=text]:focus{border-color:var(--gold)}
+
+/* HP bar */
+.hp-bar{height:6px;background:var(--bg4);border-radius:3px;overflow:hidden;margin:4px 0}
+.hp-fill{height:100%;border-radius:3px;transition:width 0.4s}
+.hp-fill.full{background:var(--green)}.hp-fill.mid{background:var(--gold)}.hp-fill.low{background:var(--red)}
+
+/* Map */
+.map-wrap{font-family:var(--mono);font-size:11px;line-height:1.45;background:var(--bg);border:0.5px solid var(--border);border-radius:var(--radius);padding:10px;overflow-x:auto;white-space:pre;color:var(--text2);margin:8px 0}
+.map-legend{font-family:var(--mono);font-size:10px;color:var(--text3);margin-top:4px}
+
+/* Narrative / exploration */
+.narr-box{background:var(--bg);border:0.5px solid var(--border);border-radius:var(--radius);padding:14px 16px;margin:8px 0;font-size:13px;line-height:1.8;color:var(--text2)}
+.narr-box p{margin-bottom:8px}.narr-box p:last-child{margin-bottom:0}
+.narr-box .narr-hear{color:var(--gold);font-style:italic;font-size:12px}
+.narr-box .narr-danger{color:var(--red);font-size:12px;font-family:var(--mono)}
+.narr-box .narr-discover{color:var(--text);font-weight:bold}
+
+/* Combat */
+.mob-card{background:var(--bg3);border:0.5px solid var(--border);border-radius:var(--radius);padding:10px 12px;margin-bottom:6px}
+.mob-name{font-size:14px;color:var(--text);display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
+.badge{font-size:10px;font-family:var(--mono);padding:2px 8px;border-radius:3px}
+.badge.enemy{background:var(--red-bg);color:var(--red)}
+.badge.boss{background:var(--purple-bg);color:var(--purple)}
+.badge.minion{background:var(--blue-bg);color:var(--blue)}
+
+.log{background:var(--bg);border:0.5px solid var(--border);border-radius:var(--radius);padding:10px;max-height:200px;overflow-y:auto;margin:8px 0;font-family:var(--mono);font-size:12px}
+.log p{margin:1px 0;padding:1px 0}
+.log .l-atk{color:var(--text)}.log .l-hit{color:var(--green)}.log .l-dmg{color:var(--red)}
+.log .l-warn{color:var(--gold)}.log .l-sys{color:var(--text2)}.log .l-head{color:var(--gold2);font-weight:bold}.log .l-loot{color:var(--purple)}
+
+/* Loot */
+.loot-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:0.5px solid var(--border);font-size:13px}
+.loot-row:last-child{border-bottom:none}
+.rarity{font-size:10px;font-family:var(--mono);padding:2px 8px;border-radius:3px}
+.r-common{background:var(--bg4);color:var(--text2)}.r-uncommon{background:var(--green-bg);color:var(--green)}
+.r-rare{background:var(--blue-bg);color:var(--blue)}.r-epic{background:var(--purple-bg);color:var(--purple)}
+.r-legendary{background:var(--gold-bg);color:var(--gold2);font-weight:bold}
+
+/* Inventory */
+.inv-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:6px}
+.inv-item{background:var(--bg3);border:0.5px solid var(--border);border-radius:var(--radius);padding:7px 10px}
+.inv-item .in{font-size:12px;color:var(--text)}.inv-item .is{font-size:11px;color:var(--text2);font-family:var(--mono)}
+
+/* Premium modal */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,0.8);display:flex;align-items:center;justify-content:center;z-index:100;padding:20px}
+.modal{background:var(--bg2);border:0.5px solid var(--gold);border-radius:16px;padding:1.5rem;max-width:440px;width:100%}
+.modal h2{color:var(--gold2);font-size:20px;margin-bottom:6px}
+.modal p{font-size:13px;color:var(--text2);margin-bottom:12px;line-height:1.7}
+.perk-list{list-style:none;margin-bottom:16px}
+.perk-list li{font-size:13px;color:var(--text);padding:4px 0;border-bottom:0.5px solid var(--border)}
+.perk-list li:before{content:"✦ ";color:var(--gold)}
+
+/* Title screen */
+#title-art{font-family:var(--mono);font-size:9px;line-height:1.2;color:var(--gold);text-align:center;margin:10px 0;white-space:pre}
+.err{color:var(--red);font-size:12px;font-family:var(--mono);margin:4px 0;display:none}
+
+/* Game log - unified scrolling narrative */
+#game-log-card{padding:0.75rem 1rem}
+#game-log{font-size:13px;line-height:1.75}
+.gl-narr{margin-bottom:14px}
+.gl-narr .gl-floor{font-size:10px;font-family:var(--mono);letter-spacing:1px;color:var(--text3);margin-bottom:4px}
+.gl-narr .gl-room{font-size:11px;font-family:var(--mono);color:var(--text3);margin-bottom:6px}
+.gl-narr p{color:var(--text2);margin-bottom:6px}
+.gl-narr .gl-sound{color:var(--gold);font-style:italic;font-size:12px}
+.gl-narr .gl-discover{color:var(--red);font-size:12px}
+.gl-divider{border:none;border-top:0.5px solid var(--border);margin:12px 0}
+.gl-section{font-size:10px;font-family:var(--mono);letter-spacing:1px;color:var(--text3);margin:10px 0 6px;display:flex;align-items:center;gap:8px}
+.gl-section::after{content:'';flex:1;height:0.5px;background:var(--border)}
+.gl-transition{background:var(--gold-bg);border:0.5px solid var(--gold);border-radius:var(--radius);padding:10px 12px;margin:10px 0;font-size:13px}
+.gl-transition .gt-title{color:var(--gold2);font-family:var(--mono);font-size:11px;letter-spacing:1px;margin-bottom:4px}
+.gl-transition p{color:var(--text2);margin-bottom:4px}
+/* Combat lines in log */
+.gl-c-head{color:var(--gold2);font-weight:bold;font-family:var(--mono);font-size:12px;margin:2px 0}
+.gl-c-hit{color:var(--green);font-family:var(--mono);font-size:12px;margin:1px 0}
+.gl-c-dmg{color:var(--red);font-family:var(--mono);font-size:12px;margin:1px 0}
+.gl-c-warn{color:var(--gold);font-family:var(--mono);font-size:12px;margin:1px 0}
+.gl-c-sys{color:var(--text2);font-family:var(--mono);font-size:12px;margin:1px 0}
+.gl-c-loot{color:var(--purple);font-family:var(--mono);font-size:12px;margin:1px 0}
+/* Loot in log */
+.gl-loot-item{display:flex;justify-content:space-between;align-items:center;padding:4px 0;border-bottom:0.5px solid var(--border);font-size:12px}
+.gl-loot-item:last-child{border-bottom:none}
+/* Combat mob card sticky */
+#combat-mob-card .card{border-color:rgba(201,76,76,0.4);background:var(--bg2)}
+.room-dots{display:flex;gap:6px;align-items:center;margin:6px 0}
+.rdot{width:10px;height:10px;border-radius:50%;background:var(--bg4);border:0.5px solid var(--border2);transition:all 0.3s}
+.rdot.done{background:var(--green)}.rdot.current{background:var(--gold);box-shadow:0 0 6px var(--gold)}.rdot.boss-dot{background:var(--purple-bg);border-color:var(--purple)}
+.rdot.boss-dot.done{background:var(--purple)}
+
+@media(max-width:480px){.class-grid{grid-template-columns:repeat(2,1fr)}.stat-grid{grid-template-columns:repeat(3,1fr)}#title-art{font-size:7px}}
+</style>
+</head>
+<body>
+<div id="wrap">
+<div class="ad-slot" id="ad-top">Advertisement</div>
+
+<!-- TOOLTIP -->
+<div class="tooltip-box" id="tooltip"></div>
+
+<!-- ═══ TITLE ═══ -->
+<div class="screen active" id="screen-title">
+  <div class="card gold-border" style="text-align:center;padding:1.5rem">
+    <div id="title-art"><div style="font-size:11px;letter-spacing:2px;color:var(--text2);font-family:var(--mono);margin-bottom:6px">R E A L M &nbsp; O F</div>
+<div style="font-family:var(--mono);font-size:9px;line-height:1.25;color:var(--gold2);text-shadow:0 0 18px rgba(201,168,76,0.5);white-space:pre;display:inline-block;text-align:left">██╗   ██╗ █████╗ ███████╗██╗     
+██║   ██║██╔══██╗██╔════╝██║     
+██║   ██║███████║█████╗  ██║     
+╚██╗ ██╔╝██╔══██║██╔══╝  ██║     
+ ╚████╔╝ ██║  ██║███████╗███████╗
+  ╚═══╝  ╚═╝  ╚═╝╚══════╝╚══════╝</div>
+<div style="font-size:10px;letter-spacing:2px;color:var(--gold);font-family:var(--mono);margin-top:6px">✦ An Age of Shattered Kingdoms ✦</div></div>
+    <div class="lore" style="text-align:left;margin:12px 0">In the age before memory, the god-smith Vaelundra shattered the Eternal Forge - and from its shards, seven kingdoms rose from ash. Now the Forge awakens again. Darkness bleeds from the cracks between worlds. Only those brave enough to descend into the cursed depths stand between the Realm and its ruin.</div>
+    <div class="row" style="justify-content:center" id="title-buttons">
+      <button class="btn gold" onclick="showScreen('screen-chargen')">Begin Your Legend</button>
+      <button class="btn" onclick="showPremium()">✦ Tavern Pass</button>
+    </div>
+    <div id="save-info" style="font-size:11px;color:var(--text2);font-family:var(--mono);margin-top:10px;min-height:16px"></div>
+    <div style="font-size:10px;color:var(--text3);font-family:var(--mono);margin-top:4px">v1.2 · Realm of Vael · © 2026</div>
+  </div>
+</div>
+
+<!-- ═══ CHARACTER GEN ═══ -->
+<div class="screen" id="screen-chargen">
+  <div class="card">
+    <h2>The Forge of Heroes</h2>
+    <div class="sub">Craft your champion - hover a class to learn more</div>
+    <p class="lore">"The Realm does not ask what you were before. It asks only what you are willing to become." - Brenneth the Sage</p>
+    <div class="section-label">Choose your calling</div>
+    <div class="class-grid" id="class-grid"></div>
+    <div class="err" id="err-class">Choose a calling to continue.</div>
+    <div id="class-flavor-bar" style="font-size:12px;color:var(--text2);font-style:italic;min-height:18px;margin:6px 0 2px;transition:opacity 0.2s"></div>
+    <div class="section-label">Your name</div>
+    <input type="text" id="hero-name" placeholder="Name your champion..." maxlength="24">
+    <div class="err" id="err-name">Enter a name to continue.</div>
+    <div class="section-label">Roll for attributes <span style="color:var(--text3);font-weight:normal">(4d6 drop lowest)</span></div>
+    <div class="stat-grid" id="stat-grid"></div>
+    <div class="row">
+      <button class="btn" onclick="rollStats()">↺ Reroll</button>
+      <button class="btn gold" onclick="beginAdventure()">Enter the Realm</button>
+    </div>
+  </div>
+</div>
+
+<!-- Sticky HUD — fixed to top of viewport during gameplay -->
+<div id="game-hud" style="display:none;position:fixed;top:0;left:0;right:0;z-index:70;pointer-events:none">
+  <div style="max-width:640px;margin:0 auto;padding:0 12px;pointer-events:auto">
+    <div style="background:var(--bg2);border-bottom:0.5px solid var(--border);padding:7px 12px;display:flex;align-items:center;gap:10px;box-shadow:0 2px 12px rgba(0,0,0,0.5)">
+      <span id="hud-name" style="font-size:12px;color:var(--text2);font-family:var(--mono);white-space:nowrap;min-width:0;overflow:hidden;text-overflow:ellipsis;flex-shrink:1"></span>
+      <div style="display:flex;align-items:center;gap:6px;flex:1;min-width:0">
+        <span id="hud-hp" style="font-size:12px;font-family:var(--mono);color:var(--text);white-space:nowrap"></span>
+        <div class="hp-bar" style="flex:1;height:8px" id="hud-hp-bar">
+          <div id="hud-hp-fill" class="hp-fill full" style="width:100%"></div>
+        </div>
+      </div>
+      <button id="hud-potion-btn" class="btn sm" onclick="drinkPotionOutsideCombat()" style="white-space:nowrap;flex-shrink:0"></button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ GAME ═══ -->
+<div class="screen" id="screen-game">
+  <div class="card" id="char-panel"></div>
+
+  <!-- Dungeon header — stays fixed at top of dungeon -->
+  <div class="card" id="explore-panel">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start">
+      <div><h2 id="adv-title">Loading…</h2>
+      <div class="sub" id="adv-region"></div></div>
+      <div style="display:flex;gap:6px">
+        <button class="btn sm" id="map-toggle-btn" onclick="toggleMap()" title="Show/hide map" style="display:none">&#9660; Map</button>
+        <button class="btn sm" onclick="saveAndExit()" title="Save and return to main menu">&#128190; Exit</button>
+      </div>
+    </div>
+    <div id="map-collapsible" style="display:none">
+      <div class="map-wrap" id="dungeon-map"></div>
+      <div class="map-legend" id="map-legend"></div>
+    </div>
+    <div class="section-label" id="room-progress-label" style="display:none">Progress</div>
+    <div class="room-dots" id="room-dots" style="display:none"></div>
+  </div>
+
+  <!-- Unified scrolling game log — constrained height with internal scroll -->
+  <div class="card" id="game-log-card">
+    <div id="game-log" style="max-height:340px;overflow-y:auto;scroll-behavior:smooth"></div>
+  </div>
+
+  <!-- Combat mob display — fixed above action bar, outside document flow -->
+  <div id="combat-mob-card" style="display:none;position:fixed;bottom:130px;left:0;right:0;z-index:58;pointer-events:none">
+    <div style="max-width:640px;margin:0 auto;padding:0 12px;pointer-events:auto">
+      <div class="card" style="margin-bottom:0;border-color:rgba(201,76,76,0.5);background:var(--bg2)">
+        <div id="combat-mob-display"></div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- Sticky action bar — sits above the ad, always visible -->
+<div id="action-bar" style="position:fixed;bottom:50px;left:0;right:0;z-index:60;pointer-events:none">
+  <div style="max-width:640px;margin:0 auto;padding:0 12px">
+    <div id="explore-actions" style="pointer-events:auto;display:flex;gap:8px;flex-wrap:wrap;background:var(--bg2);border:0.5px solid var(--border);border-radius:12px;padding:10px 12px;box-shadow:0 -4px 16px rgba(0,0,0,0.4)"></div>
+    <div id="action-row"      style="pointer-events:auto;display:flex;gap:8px;flex-wrap:wrap;background:var(--bg2);border:0.5px solid var(--border);border-radius:12px;padding:10px 12px;margin-top:6px;box-shadow:0 -4px 16px rgba(0,0,0,0.4)"></div>
+  </div>
+</div>
+
+<!-- Sticky ad -->
+<div style="position:fixed;bottom:0;left:0;right:0;background:var(--bg2);border-top:0.5px solid var(--border);z-index:50">
+  <div class="ad-slot" style="margin:0;border-radius:0;min-height:50px">Advertisement</div>
+</div>
+
+<!-- Premium modal -->
+<div class="modal-bg" id="premium-modal" style="display:none" onclick="if(event.target===this)closePremium()">
+  <div class="modal">
+    <h2>✦ Tavern Pass</h2>
+    <p>Unlock the full power of the Realm. One payment, permanent access.</p>
+    <ul class="perk-list">
+      <li>3 premium classes: Ashbinder, Thornwarden, Shard Singer</li>
+      <li>Cosmetic titles earned through heroic deeds</li>
+      <li>Infinite dungeon mode - endless descending floors</li>
+      <li>Character portrait frames &amp; name colors</li>
+      <li>Priority access to new content updates</li>
+    </ul>
+    <div style="font-size:22px;color:var(--gold2);margin-bottom:12px">$4.99 <span style="font-size:13px;color:var(--text2)">one-time</span></div>
+    <div class="row">
+      <a href="https://YOUR-STRIPE-OR-ITCH-LINK-HERE" target="_blank" rel="noopener"><button class="btn gold">Unlock Tavern Pass</button></a>
+      <button class="btn" onclick="closePremium()">Maybe later</button>
+    </div>
+    <div style="font-size:10px;color:var(--text3);font-family:var(--mono);margin-top:12px">Secure payment via Stripe · Instant unlock · No subscription</div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════
+// REALM OF VAEL - Game Engine v1.1
+// ═══════════════════════════════════════════════
+let hasTavernPass = false;
+
+// ── CLASSES ──
+const FREE_CLASSES = [
+  {
+    id:'warrior', name:'Ironbound Warrior', icon:'⚔', hpBase:12, statBonus:{STR:2},
+    shortDesc:'Strength & endurance',
+    flavor:'Forge-tempered soldiers of the Ashen Guard, the Ironbound are the backbone of every surviving army in Vael. They have never learned to be afraid.',
+    statInfo:[
+      {stat:'STR',why:'Powers every attack. Higher STR means more damage on every swing.'},
+      {stat:'CON',why:'Determines your max HP and reduces damage you take. Stay alive longer.'},
+      {stat:'DEX',why:'Helps you dodge incoming strikes. Even heavy fighters need to move.'},
+    ],
+    ability:{name:'Second Wind',icon:'💪',desc:'Dig deep and recover HP equal to your level × 4 + CON modifier. Usable once per room.',
+      use:(c)=>{ const heal=Math.min(c.level*4+mod(c.stats.CON), c.maxHp-c.hp); c.hp+=heal; return heal>0?`You grit your teeth and push through - recovered ${heal} HP!`:'You\'re already at full health.'; }}
+  },
+  {
+    id:'mage', name:'Forge Mage', icon:'🜂', hpBase:6, statBonus:{INT:2},
+    shortDesc:'Arcane power & knowledge',
+    flavor:'Scholars who tapped shards of Vaelundra\'s broken power, Forge Mages wield raw creation energy - unstable, devastating, and poorly understood even by those who use it.',
+    statInfo:[
+      {stat:'INT',why:'Fuels spell power and critical hit chance. Your primary weapon is your mind.'},
+      {stat:'WIS',why:'Improves spell accuracy and helps resist magical attacks from enemies.'},
+      {stat:'CON',why:'You are fragile. Every point of CON keeps you standing one round longer.'},
+    ],
+    ability:{name:'Shard Drain',icon:'🜂',desc:'Drain life energy from your foe, dealing INT modifier damage and healing yourself for the same amount. Usable once per room.',
+      use:(c,m)=>{ const dmg=Math.max(2,mod(c.stats.INT)+rollDie(4)); m.hp=Math.max(0,m.hp-dmg); const heal=Math.min(dmg,c.maxHp-c.hp); c.hp+=heal; return `Dark energy arcs between you - dealt ${dmg} to ${m.name}, healed ${heal} HP!`; }}
+  },
+  {
+    id:'rogue', name:'Shadow Cur', icon:'🗝', hpBase:8, statBonus:{DEX:2},
+    shortDesc:'Speed, cunning & evasion',
+    flavor:'Thieves, spies, and survivors who vanished into the cracks when the seven kingdoms fell. A Shadow Cur doesn\'t fight fair - they fight to walk away.',
+    statInfo:[
+      {stat:'DEX',why:'Drives attack speed, dodge chance, and critical hit chance. Your everything.'},
+      {stat:'STR',why:'Backstab damage scales with STR. Sneak in fast, hit hard, get out.'},
+      {stat:'CHA',why:'Unlocks extra dialogue options and occasionally lets you avoid a fight entirely.'},
+    ],
+    ability:{name:'Shadowstep',icon:'🗝',desc:'Vanish into darkness, dodging the next attack automatically AND dealing a vicious backstab (DEX + STR modifier damage). Usable once per room.',
+      use:(c,m)=>{ const dmg=Math.max(3,mod(c.stats.DEX)+mod(c.stats.STR)+rollDie(6)+4); m.hp=Math.max(0,m.hp-dmg); return `You melt into shadow and reappear behind ${m.name} - backstab for ${dmg} damage! Next attack auto-dodged.`; }}
+  },
+  {
+    id:'cleric', name:'Ashen Priest', icon:'✦', hpBase:10, statBonus:{WIS:2},
+    shortDesc:'Faith, healing & protection',
+    flavor:'Servants of the Seven Shards, the Ashen Priests mend broken bodies with fragments of Vaelundra\'s original power. They are the only reason any army in Vael still has survivors.',
+    statInfo:[
+      {stat:'WIS',why:'Powers healing spells and holy damage. The higher it is, the more you restore.'},
+      {stat:'STR',why:'When prayers aren\'t enough, a mace still works. STR backs up your combat swings.'},
+      {stat:'CON',why:'You need to stay alive to keep healing. CON is your survivability floor.'},
+    ],
+    ability:{name:'Shardlight',icon:'✦',desc:'Channel the Seven Shards to heal yourself for WIS modifier × 5 + level HP. Your most powerful recovery tool. Usable once per room.',
+      use:(c)=>{ const heal=Math.min(mod(c.stats.WIS)*5+c.level*2, c.maxHp-c.hp); c.hp+=heal; return heal>0?`Shardlight washes over you, mending your wounds - recovered ${heal} HP!`:'You are already whole.'; }}
+  },
+  {
+    id:'ranger', name:'Barren Scout', icon:'🏹', hpBase:9, statBonus:{DEX:1,WIS:1},
+    shortDesc:'Precision & wilderness survival',
+    flavor:'Lone wanderers who mapped the shattered Realm when no one else would. Barren Scouts see things before things see them - and they rarely miss twice.',
+    statInfo:[
+      {stat:'DEX',why:'Ranged attack accuracy and dodge. A Scout who can\'t aim or move is just a target.'},
+      {stat:'WIS',why:'Environmental awareness - improves trap detection and enemy-spotting in dark rooms.'},
+      {stat:'STR',why:'Draw weight on a war bow matters. STR adds damage to each arrow.'},
+    ],
+    ability:{name:'Survivalist',icon:'🏹',desc:'Field-dress your wounds using the environment. Recover HP equal to WIS modifier × 3 + DEX modifier × 2. Usable once per room.',
+      use:(c)=>{ const heal=Math.min(mod(c.stats.WIS)*3+mod(c.stats.DEX)*2+4, c.maxHp-c.hp); c.hp+=heal; return heal>0?`You bind your wounds with practiced efficiency - recovered ${heal} HP!`:'Nothing left to patch up.'; }}
+  },
+  {
+    id:'paladin', name:'Shardknight', icon:'🛡', hpBase:11, statBonus:{STR:1,CON:1},
+    shortDesc:'Holy strength & iron will',
+    flavor:'Bound by an oath older than the Shattering, Shardknights carry a fragment of the original Forge in their chest - literally. The light it gives off keeps the dark at bay. Usually.',
+    statInfo:[
+      {stat:'STR',why:'Your oath-empowered strikes deal extra damage. STR determines how much.'},
+      {stat:'CON',why:'The Forge shard sustains you. High CON means more HP and damage reduction.'},
+      {stat:'WIS',why:'Wisdom fuels your divine powers - Lay on Hands healing and holy smite bonuses.'},
+    ],
+    ability:{name:'Lay on Hands',icon:'🛡',desc:'The Forge shard in your chest flares, healing you for WIS modifier × 4 + CON modifier × 3 HP. Usable once per room.',
+      use:(c)=>{ const heal=Math.min(mod(c.stats.WIS)*4+mod(c.stats.CON)*3+6, c.maxHp-c.hp); c.hp+=heal; return heal>0?`The Forge shard blazes - you feel your wounds close. Recovered ${heal} HP!`:'The shard glows but you have no wounds to mend.'; }}
+  },
+];
+const PREMIUM_CLASSES = [
+  {
+    id:'necro', name:'Ashbinder', icon:'💀', hpBase:7, statBonus:{INT:1,WIS:1}, premium:true,
+    shortDesc:'Death magic & undead command',
+    flavor:'Weavers who call the unquiet dead back to temporary service. The Ashbinders say they\'re just borrowing. The dead don\'t seem to agree. Requires Tavern Pass.',
+    statInfo:[
+      {stat:'INT',why:'Powers the binding ritual - determines how strong and how many undead you can control.'},
+      {stat:'WIS',why:'Keeps your mind intact while channeling death energy. Neglect it at your peril.'},
+      {stat:'CON',why:'Death magic costs vitality. CON determines how many spells you can cast before collapsing.'},
+    ],
+    ability:{name:'Death Coil',icon:'💀',desc:'Siphon life force from your enemy, dealing INT modifier + d6 damage and restoring that HP to yourself. Usable once per room.',
+      use:(c,m)=>{ const dmg=Math.max(2,mod(c.stats.INT)+rollDie(6)); m.hp=Math.max(0,m.hp-dmg); const heal=Math.min(dmg,c.maxHp-c.hp); c.hp+=heal; return `A coil of necrotic energy tears life from ${m.name} - dealt ${dmg}, absorbed ${heal} HP!`; }}
+  },
+  {
+    id:'druid', name:'Thornwarden', icon:'🌿', hpBase:9, statBonus:{WIS:2}, premium:true,
+    shortDesc:'Nature power & shapeshifting',
+    flavor:'Bonded to Thornwood\'s living memory, Thornwardens don\'t just speak to nature - they become it. Their transformations are not always voluntary. Requires Tavern Pass.',
+    statInfo:[
+      {stat:'WIS',why:'Governs nature magic potency and shapeshift duration. This is your core stat.'},
+      {stat:'CON',why:'Shapeshifting is physically brutal. High CON prevents transformation sickness.'},
+      {stat:'STR',why:'Animal forms gain bonus damage from your base STR. Don\'t neglect the body.'},
+    ],
+    ability:{name:'Thornmend',icon:'🌿',desc:'Draw on Thornwood\'s ancient memory to regenerate WIS modifier × 5 HP. Usable once per room.',
+      use:(c)=>{ const heal=Math.min(mod(c.stats.WIS)*5+6, c.maxHp-c.hp); c.hp+=heal; return heal>0?`Roots and vines briefly embrace you, mending your flesh - recovered ${heal} HP!`:'You are already whole.'; }}
+  },
+  {
+    id:'bard', name:'Shard Singer', icon:'🎵', hpBase:8, statBonus:{CHA:2}, premium:true,
+    shortDesc:'Music, charm & battlefield support',
+    flavor:'Troubadours whose songs carry fragments of the Forge\'s original resonance. A Shard Singer\'s melody can inspire allies, shatter enemy morale, or open a locked door. Requires Tavern Pass.',
+    statInfo:[
+      {stat:'CHA',why:'Every ability you have runs on CHA. Inspire allies, charm enemies, and open dialogue paths.'},
+      {stat:'DEX',why:'Staying in the back row only works if you can dodge when the fighting gets close.'},
+      {stat:'INT',why:'Song construction is mathematics. INT improves the precision and range of your performances.'},
+    ],
+    ability:{name:'Resonance',icon:'🎵',desc:'A fragment of the Forge\'s original song - heals CHA modifier × 4 HP and briefly stuns the enemy (they miss their next attack). Usable once per room.',
+      use:(c)=>{ const heal=Math.min(mod(c.stats.CHA)*4+5, c.maxHp-c.hp); c.hp+=heal; return heal>0?`A pure note rings out - the enemy recoils! Recovered ${heal} HP and enemy loses next attack.`:'The song rings true but your wounds are already closed.'; }}
+  },
+];
+const ALL_CLASSES = [...FREE_CLASSES, ...PREMIUM_CLASSES];
+const STATS = ['STR','DEX','CON','INT','WIS','CHA'];
+
+// ── ROOMS - narrative text for each dungeon section ──
+// Stub floor generator - must be defined before ADVENTURES array
+function stubFloor(key, floorNum, enemyPool, bossOrMini){
+  const isBossFloor = bossOrMini.type==='boss';
+  return { floorNum, floorName:`Floor ${floorNum}`, floorIntro:`Floor ${floorNum} of this dungeon is still being constructed.`,
+    rooms:[
+      { type:'Passage', combatRoom:false, texts:[`You move deeper into floor ${floorNum}.`], sound:'The dungeon is quiet.', action:'Continue' },
+      { type:'Chamber A', combatRoom:true, texts:['Enemies guard the passage.'], sound:'They notice you.', discover:'They attack.', mobs:[enemyPool[0],enemyPool[1]].filter(Boolean), action:'Fight' },
+      { type:'Chamber B', combatRoom:true, texts:['More guards ahead.'], sound:'Movement.', discover:'They attack.', mobs:[(enemyPool[2]||enemyPool[0]),enemyPool[1]].filter(Boolean), action:'Fight' },
+      { type:'Chamber C', combatRoom:true, texts:['A larger chamber.'], sound:'Silence.', discover:'They rise.', mobs:[(enemyPool[3]||enemyPool[2]||enemyPool[0]),(enemyPool[2]||enemyPool[0])].filter(Boolean), action:'Fight' },
+      { type:isBossFloor?'Boss Chamber':'Floor Boss', combatRoom:true, isMini:!isBossFloor, isBoss:isBossFloor,
+        texts:[`${bossOrMini.name} waits at the end of this floor.`], sound:'A powerful presence ahead.', discover:'It turns toward you.',
+        mobs:[bossOrMini], action:`Face ${bossOrMini.name}` },
+    ]};
+}
+
+// ══════════════════════════════════════════════════════════
+// DUNGEON DATA - 3 floors x 5 rooms = 15 rooms per dungeon
+// Each floor ends with a mini-boss (floors 1 & 2) or main boss (floor 3)
+// ══════════════════════════════════════════════════════════
+
+const ADVENTURES = [
+
+// ════════════════════════════════════════════════════════════════
+//  DUNGEON 1: THE ASHEN TOMB  (full 15-room implementation)
+// ════════════════════════════════════════════════════════════════
+{ title:'The Ashen Tomb', roomKey:'tomb', region:0,
+  map:
+`┌───────────────────────────────┐
+│  ░░░░░░░░░░░░░░░░░░░░░░░░░░░  │
+│  ░  ┌──────────────────────┐  │
+│  ░  │  F3-5: THE VAULT     │  │
+│  ░  │  [SHARDKEEPER]  [B]  │  │
+│  ░  └──────────┬───────────┘  │
+│  ░░░░░░░░░░░░░│░░░░░░░░░░░░░  │
+│  ░  ┌──────────┴───────────┐  │
+│  ░  │  F3-4: OFFERING HALL │  │
+│  ░  └──────────┬───────────┘  │
+│  ░░░░░░░░░░░░░│░░░░░░░░░░░░░  │
+│  ░  ┌──────────┴───────────┐  │
+│  ░  │  F3-3: SEALED DOOR   │  │
+│  ░  └──────────┬───────────┘  │
+│  ░░░░ FLOOR 2 ░│░ TRANSITION  │
+│  ░  ┌──────────┴───────────┐  │
+│  ░  │  F2-5: WARDEN CHAPEL │  │
+│  ░  │  [ALDRIC]       [M]  │  │
+│  ░  └──────────┬───────────┘  │
+│  ░  ┌──────────┴───────────┐  │
+│  ░  │  F2-4: INNER SANCTUM │  │
+│  ░  └──────────┬───────────┘  │
+│  ░  ┌──────────┴───────────┐  │
+│  ░  │  F2-3: CRYPT DEPTHS  │  │
+│  ░  └──────────┬───────────┘  │
+│  ░░░░ FLOOR 1 ░│░ TRANSITION  │
+│  ░  ┌──────────┴───────────┐  │
+│  ░  │  F1-5: BURIAL GALLERY│  │
+│  ░  │  [OSRIC]        [M]  │  │
+│  ░  └──────────┬───────────┘  │
+│  ░  ┌──────────┴───────────┐  │
+│  ░  │  F1-4: SARCOPHAGUS   │  │
+│  ░  └──────────┬───────────┘  │
+│  ░  ┌──────────┴───────────┐  │
+│  ░  │  F1-3: ASH CORRIDOR  │  │
+│  ░  └──────────┬───────────┘  │
+│  ░  ┌──────────┴───────────┐  │
+│  ░  │  F1-2: OUTER HALL    │  │
+│  ░  └──────────┬───────────┘  │
+│  ░  ┌──────────┴───────────┐  │
+│  ░  │  F1-1: ENTRANCE  [@] │  │
+│  ░  └──────────────────────┘  │
+│  ░░░░░░░░░░░░░░░░░░░░░░░░░░░  │
+└───────────────────────────────┘`,
+  legend:'@ = You  B = Final Boss  M = Mini-boss  E = Enemies  ░ = Stone',
+  floors:[
+  // ─────────────────────────────────
+  // FLOOR 1: THE OUTER TOMB
+  // ─────────────────────────────────
+  { floorNum:1, floorName:'Floor 1 - The Outer Tomb',
+    floorIntro:'The outer tomb has not been entered in living memory. You are the first living thing to breathe this air in longer than the oldest kingdom has stood.',
+    rooms:[
+      { type:'F1-1: Entrance', combatRoom:false,
+        texts:['The iron door groans as you force it open. The air that escapes is cold and stale - the kind of cold that has been sitting undisturbed for decades. Stone steps descend into darkness. The walls are carved with prayers in a language older than the Ashen Guard. Someone has scratched through several of them.',
+               'Dust drifts in the thin beam of light before the door swings shut behind you. The floor is thick with grey ash. Your boots leave the first prints made here in a very long time. You stand in a small antechamber. Three arched passages lead deeper. The one in the center is sealed with iron. The left one ends in rubble. You take the right.'],
+        sound:'Somewhere below, you hear the slow, patient scrape of bone on stone.',
+        action:'Move into the tomb' },
+
+      { type:'F1-2: Outer Hall', combatRoom:true,
+        texts:['The passage opens into a long funeral hall. Stone sarcophagi line both walls, their lids cracked and shifted. Most are empty. The dust on the floor has been disturbed - recently. Something came through here, and it moved without feet.',
+               'Torches in iron brackets still burn with a blue-white flame that gives no warmth. Their light makes the shadows between the sarcophagi move in ways shadows should not move.'],
+        sound:'A low rattling rises from the far end of the hall.',
+        discover:'Two shapes separate from the darkness between the sarcophagi. They move like they remember how to walk, but only barely.',
+        mobs:[ {name:'Cinder Wraith', atk:4, def:1, xp:15, gold:3, type:'minion'},
+               {name:'Cinder Wraith', atk:4, def:1, xp:15, gold:3, type:'minion'} ],
+        action:'Fight through the outer hall' },
+
+      { type:'F1-3: The Ash Corridor', combatRoom:true,
+        texts:['Beyond the funeral hall, the corridor narrows. The ceiling lowers. The ash on the floor here is deeper - ankle-deep in places, undisturbed except for a single trail of disturbance that runs down the center of the passage like something was dragged.',
+               'The carvings on the walls change. The prayers give way to instructions: how to prepare a body, how to bind a soul, how to keep the dead from waking. Someone failed to follow them.'],
+        sound:'A dry rattling ahead. Not one sound - several, offset, rhythmic.',
+        discover:'They rise from the ash as you approach. There is no warning, no dramatic moment. They simply stand up.',
+        mobs:[ {name:'Ashen Revenant',  atk:5, def:1, xp:20, gold:4, type:'minion'},
+               {name:'Cinder Wraith',   atk:4, def:1, xp:15, gold:3, type:'minion'} ],
+        action:'Push through the ash corridor' },
+
+      { type:'F1-4: The Sarcophagus Chamber', combatRoom:true,
+        texts:['The corridor opens into a wider chamber. At its center stands a single sarcophagus, larger than the others, raised on a stone dais. The lid has been pushed aside from within. Whatever was inside has been gone for some time.',
+               'The walls here are covered in a different kind of carving - not prayers or instructions, but warnings. They repeat the same phrase in three languages. You only know one of them, but it is enough: DO NOT DESCEND FURTHER.',
+               'You descend further.'],
+        sound:'The scraping sound is closer now. And there is a second sound beneath it - something that might be breathing.',
+        discover:'The guardian that rises from behind the dais was not in the sarcophagus. It was waiting.',
+        mobs:[ {name:'Tomb Guardian',   atk:6, def:2, xp:28, gold:6, type:'enemy'},
+               {name:'Ashen Revenant',  atk:5, def:1, xp:20, gold:4, type:'minion'} ],
+        action:'Defeat the chamber guardian' },
+
+      { type:'F1-5: The Burial Gallery', combatRoom:true, isMini:true,
+        texts:['The burial gallery is where the tomb\'s most honored dead were laid. Carved effigies of knights, priests, and scholars line the walls in alcoves, each holding the stone likeness of what they carried in life.',
+               'At the gallery\'s end, standing before a heavy iron door that leads deeper, is a figure in plate armor so old it has fused with the bones beneath. He holds a sword that glows with a faint blue light that matches the torches.',
+               '"You came further than I expected," he says. His voice is clear, unhurried. "Most turn back at the warnings. The ones who don\'t usually die in the sarcophagus chamber." He looks at you with something that might be respect. "I am Osric. I was the tomb\'s first warden, before the position passed to Aldric below. I have been here for one hundred and sixty years." A pause. "I am still very good at this."'],
+        sound:'The effigies in the alcoves turn their stone heads toward you, one by one.',
+        discover:'Osric raises his sword. The blue light flares.',
+        mobs:[ {name:'Osric the First Warden', atk:8, def:3, xp:65, gold:18, type:'miniboss'} ],
+        action:'Face Osric, the First Warden' },
+    ]},
+
+  // ─────────────────────────────────
+  // FLOOR 2: THE INNER SANCTUM
+  // ─────────────────────────────────
+  { floorNum:2, floorName:'Floor 2 - The Inner Sanctum',
+    floorIntro:'The inner sanctum is where the tomb\'s true purpose lives. The outer tomb keeps people out. Down here, something was being kept in.',
+    rooms:[
+      { type:'F2-1: The Descent', combatRoom:false,
+        texts:['The iron door Osric was guarding opens onto a staircase that goes down much further than the outer tomb suggested was possible. The stone here is older, darker, cut by different hands. There are no carvings on these walls. There is no ash on these steps.',
+               'Halfway down, you pass through a change in the air - from cold to something colder, from still to something pressurized, like the stone itself is breathing against you. When you reach the bottom, you understand why the warnings said not to descend.'],
+        sound:'The door above you seals shut with a sound like a sigh.',
+        action:'Proceed into the inner sanctum' },
+
+      { type:'F2-2: The Mourning Hall', combatRoom:true,
+        texts:['The mourning hall is where the living came to say goodbye to the honored dead. It is a long room with stone benches, a raised platform at the far end, and walls that were once painted with scenes of afterlife and peace.',
+               'The paint has cracked and fallen. Whatever is pictured on the walls now was not painted by human hands. It shows the same figure, over and over - a woman standing above a broken world, her hands full of light. The Shardkeeper. She is everywhere here. And she does not look like someone who is resting.'],
+        sound:'The benches are occupied. The figures sitting on them are not alive. They are also not quite dead.',
+        discover:'The grave sentinels rise from the benches without hurry. They have been waiting a very long time.',
+        mobs:[ {name:'Grave Sentinel',  atk:6, def:2, xp:28, gold:6, type:'enemy'},
+               {name:'Grave Sentinel',  atk:6, def:2, xp:28, gold:6, type:'enemy'} ],
+        action:'Fight through the mourning hall' },
+
+      { type:'F2-3: The Crypt Depths', combatRoom:true,
+        texts:['Past the mourning hall, the passages branch in six directions. Five of them end in sealed crypts. The sixth continues forward, marked by a series of handprints pressed into the stone in something that is not paint.',
+               'The crypts on either side are not sealed anymore. Someone opened them from inside.'],
+        sound:'Movement in the side passages - not pursuit, just awareness. They know you are here.',
+        discover:'Two figures step from the open crypts. They move with more purpose than the ones above. They have had longer to practice.',
+        mobs:[ {name:'Crypt Revenant',  atk:7, def:2, xp:32, gold:7, type:'enemy'},
+               {name:'Grave Sentinel',  atk:6, def:2, xp:28, gold:6, type:'enemy'} ],
+        action:'Fight through the crypt depths' },
+
+      { type:'F2-4: The Inner Sanctum', combatRoom:true,
+        texts:['The inner sanctum proper is a vaulted chamber whose ceiling is lost in shadow. At its center stands an altar of black stone, uncarved, unmarked, still carrying the slight warmth of recent use.',
+               'The chamber is not empty. The figures here are different from the ones above - they move with precision, with purpose, with something that looks like intent. They were not ordinary people when they died. They were guards.'],
+        sound:'You hear a voice from somewhere beyond the far door, speaking words you cannot make out. It sounds like a prayer. It sounds like it has been going on for a very long time.',
+        discover:'The sanctum guardians move to intercept you without hesitation or drama.',
+        mobs:[ {name:'Sanctum Guardian', atk:7, def:3, xp:34, gold:8, type:'enemy'},
+               {name:'Crypt Revenant',   atk:7, def:2, xp:32, gold:7, type:'enemy'} ],
+        action:'Fight through the inner sanctum' },
+
+      { type:'F2-5: The Warden Chapel', combatRoom:true, isMini:true,
+        texts:['The chapel is small, lit by dozens of blue candles that have never burned down. At its center, kneeling on the stone floor before a carved effigy of the Shardkeeper, is a figure in tarnished plate armor.',
+               'He does not turn when you enter. "I heard you at the door to the descent," he says. "I heard you fight through the mourning hall, the crypt depths, the inner sanctum." He rises slowly. "I heard you defeat Osric. He was the best of us." He finally turns, and his face is that of a man in his forties, preserved by the same oath that preserved him in death. "I am Aldric. I was appointed to this post because I was better than Osric." His hand finds the hilt of his sword. "Prove that you are better than me, and you may pass."'],
+        sound:'The candles flare as Aldric draws his sword. The effigy of the Shardkeeper seems to watch.',
+        discover:'Aldric the Tomb Warden steps forward. The oath that binds him is older than the kingdoms.',
+        mobs:[ {name:'Aldric the Tomb Warden', atk:10, def:4, xp:80, gold:22, type:'miniboss'} ],
+        action:'Face Aldric, the Tomb Warden' },
+    ]},
+
+  // ─────────────────────────────────
+  // FLOOR 3: THE VAULT
+  // ─────────────────────────────────
+  { floorNum:3, floorName:'Floor 3 - The Vault',
+    floorIntro:'The vault is where she sleeps. Or where she was supposed to sleep. The lock on the innermost door was broken from inside. She has been awake for some time.',
+    rooms:[
+      { type:'F3-1: The Sealed Passage', combatRoom:false,
+        texts:['Beyond Aldric\'s chapel is a passage that is different from everything above it. The stone here is smooth, almost polished. The air is perfectly still. No ash, no dust, no cobwebs. Everything has been cleaned. Recently.',
+               'The passage slopes downward at a slight angle that you feel in your knees rather than your eyes. It goes on for a long time. Longer than the tomb\'s footprint above should allow. You begin to suspect that the Ashen Tomb is larger on the inside than it has any right to be.'],
+        sound:'Perfect silence. That is somehow worse than the scraping and rattling above.',
+        action:'Continue down the sealed passage' },
+
+      { type:'F3-2: The Offering Hall', combatRoom:true,
+        texts:['The offering hall is where the tomb\'s caretakers left gifts for the sleeping Shardkeeper - food that never rotted, flowers that never wilted, candles that never burned out. They all still sit on their stone shelves, perfectly preserved.',
+               'The Shardkeeper\'s attendants are here too. They were sealed in with her, to serve her through eternity. They have had nothing to do for a very long time. They are not pleased to see you.',
+               'They do not look like the undead above. They look like they went to sleep yesterday. Only their eyes are wrong - the wrong color, the wrong depth, the wrong kind of light.'],
+        sound:'"You should not have come," says one of them. Her voice is perfectly normal. That makes it worse.',
+        discover:'The attendants move to stop you with the focused efficiency of people who have been waiting for exactly this.',
+        mobs:[ {name:'Tomb Attendant',  atk:8, def:3, xp:38, gold:10, type:'enemy'},
+               {name:'Tomb Attendant',  atk:8, def:3, xp:38, gold:10, type:'enemy'} ],
+        action:'Fight past the attendants' },
+
+      { type:'F3-3: The Antechamber', combatRoom:true,
+        texts:['The antechamber before the vault proper is decorated with scenes from the Shardkeeper\'s life - not stone carvings, but paintings, still bright and clear as the day they were made. They show a woman of middle years with grey-streaked hair and the kind of calm that comes from having seen too much to be surprised by anything.',
+               'She is shown receiving the Forge shard. She is shown being sealed in the tomb. In the final painting, she is shown standing in the sealed vault, very much awake, studying the door from the inside.',
+               'The door behind the antechamber bears a single word carved into the stone above the frame: FINALLY.'],
+        sound:'You hear, for the first time since you entered the tomb, a sound that is unambiguously human: someone exhaling slowly.',
+        discover:'The final guardians stand between you and the vault door. They are the oldest and the strongest.',
+        mobs:[ {name:'Vault Guardian',  atk:9, def:3, xp:42, gold:12, type:'enemy'},
+               {name:'Tomb Attendant',  atk:8, def:3, xp:38, gold:10, type:'enemy'} ],
+        action:'Fight through the antechamber' },
+
+      { type:'F3-4: Approach to the Vault', combatRoom:false,
+        texts:['The vault door is iron banded with seven strips of bronze, one for each of the seven kingdoms that contributed to the Shardkeeper\'s internment. Six of the seven locks have been opened from the inside. The seventh is still sealed.',
+               'As you watch, the seventh lock turns. The door swings open on hinges that make no sound at all.',
+               '"I have been watching you since you entered," says a voice from inside. "You fight well for someone alive." A pause. "I meant that as a compliment. I have forgotten how the living take things."'],
+        sound:'The silence after the door opens is absolute. Even the perfect silence of the passage behind you was something. This is nothing.',
+        action:'Enter the vault' },
+
+      { type:'F3-5: The Shardkeeper\'s Vault', combatRoom:true, isBoss:true,
+        texts:['The vault is a domed chamber open to black sky through a crack in the ceiling that runs the full diameter of the dome. Rain has pooled on the floor, perfectly still despite the breeze from above. In the water\'s surface you see reflections of things that are not in the room.',
+               'She stands at the vault\'s center with her hands clasped and her eyes open - the same grey-streaked woman from the paintings, looking exactly as she did when she was sealed in here, which was three hundred years ago. The Forge shard she was given to protect sits in a mounting on the altar behind her, glowing with a light that is not quite any color you have a name for.',
+               '"I am the First Shardkeeper," she says. "I was given this shard for safekeeping until the Realm had need of it. The Realm has had need of it for two hundred years. No one came." She studies you. "Until you. I find myself unable to simply hand it over. I need to know you are worth it. I hope you understand."'],
+        sound:'The light from the shard pulses once - slow, like a heartbeat. The water on the floor ripples outward from where she stands.',
+        discover:'The First Shardkeeper raises her hands, and the light from the shard comes with them. Her eyes burn like cinders. She is not angry. She is thorough.',
+        mobs:[ {name:'The First Shardkeeper', atk:10, def:4, xp:120, gold:35, type:'boss'} ],
+        action:'Face the First Shardkeeper' },
+    ]},
+  ]}, // end Ashen Tomb
+
+// ════════════════════════════════════════════════════════════════
+//  DUNGEONS 2-6: STUBS (will be expanded after Tomb is tuned)
+// ════════════════════════════════════════════════════════════════
+{ title:'Grimhallow Crypts', roomKey:'crypts', region:1,
+  map:`╔══════════════════════╗\n║  [STUB - Coming Soon] ║\n╚══════════════════════╝`,
+  legend:'Full dungeon coming soon',
+  floors:[
+    { floorNum:1, floorName:'Floor 1', floorIntro:'The crypts await.',
+      rooms:[
+        { type:'Entrance', combatRoom:false, texts:['The crypt entrance is marked by a cracked skull above the arch. The Undying carved these halls before the kingdoms had names.'], sound:'Distant chanting.', action:'Enter the crypts' },
+        { type:'Hall', combatRoom:true, texts:['Hollow soldiers fill the corridor.'], sound:'Rattling.', discover:'They turn toward you.', mobs:[{name:'Hollow Soldier',atk:4,def:1,xp:18,gold:3,type:'minion'},{name:'Hollow Soldier',atk:4,def:1,xp:18,gold:3,type:'minion'}], action:'Fight' },
+        { type:'Hall 2', combatRoom:true, texts:['The corridor continues.'], sound:'More rattling.', discover:'More soldiers.', mobs:[{name:'Cryptsong Banshee',atk:6,def:1,xp:28,gold:5,type:'enemy'},{name:'Hollow Soldier',atk:4,def:1,xp:18,gold:3,type:'minion'}], action:'Fight' },
+        { type:'Chamber', combatRoom:true, texts:['A wider chamber.'], sound:'Silence.', discover:'Guards.', mobs:[{name:'Bonelord Archer',atk:6,def:2,xp:30,gold:6,type:'enemy'},{name:'Cryptsong Banshee',atk:6,def:1,xp:28,gold:5,type:'enemy'}], action:'Fight' },
+        { type:'Floor Boss', combatRoom:true, isMini:true, texts:['Seraveth the Chancel Warden stands at the altar.'], sound:'The choir rises.', discover:'She turns.', mobs:[{name:'Seraveth the Chancel Warden',atk:9,def:3,xp:75,gold:20,type:'miniboss'}], action:'Face Seraveth' },
+      ]},
+    { floorNum:2, floorName:'Floor 2', floorIntro:'Deeper into the crypts.',
+      rooms:[
+        { type:'Descent', combatRoom:false, texts:['You descend further into Grimhallow.'], sound:'Chanting grows louder.', action:'Descend' },
+        { type:'Singing Hall', combatRoom:true, texts:['Names cover every wall, being whispered by no mouth.'], sound:'Your name is not here. You check twice.', discover:'Ossuary shades emerge.', mobs:[{name:'Ossuary Shade',atk:7,def:1,xp:32,gold:7,type:'enemy'},{name:'Bonelord Archer',atk:6,def:2,xp:30,gold:6,type:'enemy'}], action:'Fight' },
+        { type:'Bone Hall', combatRoom:true, texts:['The architecture here is made of the dead.'], sound:'Clicks and chatters.', discover:'The walls move.', mobs:[{name:'Ossuary Shade',atk:7,def:1,xp:32,gold:7,type:'enemy'},{name:'Crypt Revenant',atk:7,def:2,xp:32,gold:7,type:'enemy'}], action:'Fight' },
+        { type:'Patriarch Approach', combatRoom:true, texts:['The throne chamber approaches.'], sound:'Deep silence.', discover:'Final guards.', mobs:[{name:'Crypt Revenant',atk:7,def:2,xp:32,gold:7,type:'enemy'},{name:'Sanctum Guardian',atk:7,def:3,xp:34,gold:8,type:'enemy'}], action:'Fight' },
+        { type:'Floor Boss 2', combatRoom:true, isMini:true, texts:['A second warden blocks the deepest passage.'], sound:'The dead chant his name.', discover:'He rises.', mobs:[{name:'Vault Warden',atk:10,def:4,xp:78,gold:22,type:'miniboss'}], action:'Fight' },
+      ]},
+    { floorNum:3, floorName:'Floor 3', floorIntro:'The Patriarch waits.',
+      rooms:[
+        { type:'Final Descent', combatRoom:false, texts:['The last staircase descends to the Patriarch.'], sound:'Absolute silence.', action:'Descend' },
+        { type:'Antechamber', combatRoom:true, texts:['Guards line the final approach.'], sound:'They turn.', discover:'Attack.', mobs:[{name:'Vault Guardian',atk:9,def:3,xp:42,gold:12,type:'enemy'},{name:'Sanctum Guardian',atk:7,def:3,xp:34,gold:8,type:'enemy'}], action:'Fight' },
+        { type:'Outer Hall', combatRoom:true, texts:['The throne room approaches.'], sound:'The chanting stops.', discover:'Elite guards.', mobs:[{name:'Vault Guardian',atk:9,def:3,xp:42,gold:12,type:'enemy'},{name:'Tomb Attendant',atk:8,def:3,xp:38,gold:10,type:'enemy'}], action:'Fight' },
+        { type:'Throne Approach', combatRoom:false, texts:['The throne of bone rises before you. Osserath sits upon it, patient as stone.', '"You came," he says. "Good. I was beginning to think no one would."'], sound:'The skulls in the walls begin to chatter softly.', action:'Approach the Patriarch' },
+        { type:'Patriarch Throne', combatRoom:true, isBoss:true, texts:['Osserath rises from his throne of interlocked skulls. The chanting of ten thousand dead voices fills the air.'], sound:'The chanting reaches its peak.', discover:'The Undying Patriarch moves toward you.', mobs:[{name:'Undying Patriarch Osserath',atk:12,def:5,xp:150,gold:38,type:'boss'}], action:'Face Osserath' },
+      ]},
+  ]},
+
+{ title:'The Frostbitten Keep', roomKey:'keep', region:2,
+  map:`┏━━━━━━━━━━━━━━━━━━━━━━┓\n┃  [STUB - Coming Soon] ┃\n┗━━━━━━━━━━━━━━━━━━━━━━┛`, legend:'Full dungeon coming soon',
+  floors:[ stubFloor('keep',1,[{name:'Frost Revenant',atk:4,def:2,xp:20,gold:3,type:'minion'},{name:'Ice Wight',atk:6,def:2,xp:28,gold:5,type:'enemy'},{name:'Glacial Construct',atk:7,def:3,xp:32,gold:7,type:'enemy'},{name:'Icebound Knight',atk:7,def:3,xp:32,gold:7,type:'enemy'}],{name:'Maret the Quartermaster',atk:9,def:4,xp:75,gold:20,type:'miniboss'}),
+           stubFloor('keep',2,[{name:'Glacial Construct',atk:7,def:3,xp:32,gold:7,type:'enemy'},{name:'Icebound Knight',atk:7,def:3,xp:32,gold:7,type:'enemy'},{name:'Frost Revenant',atk:4,def:2,xp:20,gold:3,type:'minion'},{name:'Ice Wight',atk:6,def:2,xp:28,gold:5,type:'enemy'}],{name:'Frozen Commander',atk:10,def:4,xp:78,gold:22,type:'miniboss'}),
+           stubFloor('keep',3,[{name:'Icebound Knight',atk:7,def:3,xp:32,gold:7,type:'enemy'},{name:'Glacial Construct',atk:7,def:3,xp:32,gold:7,type:'enemy'},{name:'Vault Guardian',atk:9,def:3,xp:42,gold:12,type:'enemy'},{name:'Tomb Attendant',atk:8,def:3,xp:38,gold:10,type:'enemy'}],{name:'Frostbound Warlord Caldrex',atk:13,def:5,xp:160,gold:42,type:'boss'}) ]},
+
+{ title:'Thornwood Sanctum', roomKey:'thornwood', region:3,
+  map:`≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈\n≈  [STUB - Coming Soon] ≈\n≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈`, legend:'Full dungeon coming soon',
+  floors:[ stubFloor('thornwood',1,[{name:'Thornwood Lurker',atk:5,def:1,xp:20,gold:4,type:'minion'},{name:'Root Strangler',atk:6,def:2,xp:28,gold:5,type:'enemy'},{name:'Duskbark Horror',atk:7,def:2,xp:32,gold:7,type:'enemy'},{name:'Briarvine Wraith',atk:7,def:2,xp:32,gold:7,type:'enemy'}],{name:'Veth the Grove Keeper',atk:9,def:3,xp:78,gold:20,type:'miniboss'}),
+           stubFloor('thornwood',2,[{name:'Duskbark Horror',atk:7,def:2,xp:32,gold:7,type:'enemy'},{name:'Briarvine Wraith',atk:7,def:2,xp:32,gold:7,type:'enemy'},{name:'Root Strangler',atk:6,def:2,xp:28,gold:5,type:'enemy'},{name:'Thornwood Lurker',atk:5,def:1,xp:20,gold:4,type:'minion'}],{name:'Ancient Thornbinder',atk:11,def:4,xp:82,gold:24,type:'miniboss'}),
+           stubFloor('thornwood',3,[{name:'Briarvine Wraith',atk:7,def:2,xp:32,gold:7,type:'enemy'},{name:'Duskbark Horror',atk:7,def:2,xp:32,gold:7,type:'enemy'},{name:'Vault Guardian',atk:9,def:3,xp:42,gold:12,type:'enemy'},{name:'Sanctum Guardian',atk:7,def:3,xp:34,gold:8,type:'enemy'}],{name:'Morveth the Rooted',atk:14,def:6,xp:170,gold:48,type:'boss'}) ]},
+
+{ title:'The Sunken Citadel', roomKey:'citadel', region:4,
+  map:`~~~~~~~~~~~~~~~~~~~~~~~~~\n~  [STUB - Coming Soon] ~\n~~~~~~~~~~~~~~~~~~~~~~~~~`, legend:'Full dungeon coming soon',
+  floors:[ stubFloor('citadel',1,[{name:'Drowned Sentinel',atk:6,def:2,xp:22,gold:4,type:'minion'},{name:'Forge-Cursed Mate',atk:7,def:3,xp:30,gold:6,type:'enemy'},{name:'Forge-Cursed Knight',atk:8,def:3,xp:35,gold:8,type:'enemy'},{name:'Deep Current Hag',atk:8,def:2,xp:35,gold:8,type:'enemy'}],{name:'First Mate Corra Vane',atk:10,def:4,xp:82,gold:22,type:'miniboss'}),
+           stubFloor('citadel',2,[{name:'Forge-Cursed Knight',atk:8,def:3,xp:35,gold:8,type:'enemy'},{name:'Deep Current Hag',atk:8,def:2,xp:35,gold:8,type:'enemy'},{name:'Drowned Sentinel',atk:6,def:2,xp:22,gold:4,type:'minion'},{name:'Forge-Cursed Mate',atk:7,def:3,xp:30,gold:6,type:'enemy'}],{name:'Sunken Commander',atk:11,def:4,xp:86,gold:25,type:'miniboss'}),
+           stubFloor('citadel',3,[{name:'Deep Current Hag',atk:8,def:2,xp:35,gold:8,type:'enemy'},{name:'Forge-Cursed Knight',atk:8,def:3,xp:35,gold:8,type:'enemy'},{name:'Vault Guardian',atk:9,def:3,xp:42,gold:12,type:'enemy'},{name:'Tomb Attendant',atk:8,def:3,xp:38,gold:10,type:'enemy'}],{name:'Admiral Drael - The Submerged',atk:15,def:6,xp:180,gold:55,type:'boss'}) ]},
+
+{ title:"Vael's Cradle - The Eternal Forge", roomKey:'forge', region:5,
+  map:`▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓\n▓  [STUB - Coming Soon]  ▓\n▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓`, legend:'Full dungeon coming soon',
+  floors:[ stubFloor('forge',1,[{name:'Forge Elemental',atk:7,def:3,xp:28,gold:6,type:'minion'},{name:'Shard Golem',atk:9,def:4,xp:38,gold:9,type:'enemy'},{name:'Void Harbinger',atk:10,def:3,xp:42,gold:11,type:'enemy'},{name:'Memory Specter',atk:10,def:3,xp:42,gold:11,type:'enemy'}],{name:'The Forge Colossus',atk:12,def:5,xp:90,gold:28,type:'miniboss'}),
+           stubFloor('forge',2,[{name:'Void Harbinger',atk:10,def:3,xp:42,gold:11,type:'enemy'},{name:'Memory Specter',atk:10,def:3,xp:42,gold:11,type:'enemy'},{name:'Shard Golem',atk:9,def:4,xp:38,gold:9,type:'enemy'},{name:'Forge Elemental',atk:7,def:3,xp:28,gold:6,type:'minion'}],{name:'Forge Archon',atk:14,def:6,xp:96,gold:32,type:'miniboss'}),
+           stubFloor('forge',3,[{name:'Memory Specter',atk:10,def:3,xp:42,gold:11,type:'enemy'},{name:'Void Harbinger',atk:10,def:3,xp:42,gold:11,type:'enemy'},{name:'Vault Guardian',atk:9,def:3,xp:42,gold:12,type:'enemy'},{name:'Tomb Attendant',atk:8,def:3,xp:38,gold:10,type:'enemy'}],{name:'VAELUNDRA - THE UNBOUND',atk:18,def:8,xp:220,gold:90,type:'boss'}) ]},
+
+]; // end ADVENTURES
+
+const WORLD_REGIONS = [
+  'The Ashen Barrens','Grimhallow Depths','The Frostbitten Marches',
+  'Thornwood Reach','The Sunken Citadel','Vael\'s Cradle'
+];
+
+// ── LOOT ──
+const LOOT = [
+  {name:'Ashen Blade',type:'weapon',stat:'ATK',rarity:'common',val:[2,4]},
+  {name:'Shard Dagger',type:'weapon',stat:'ATK',rarity:'uncommon',val:[4,7]},
+  {name:"Brenneth's Staff",type:'weapon',stat:'INT',rarity:'rare',val:[6,10]},
+  {name:'Vaelite Sword',type:'weapon',stat:'ATK',rarity:'epic',val:[9,14]},
+  {name:'The Forge Shard',type:'weapon',stat:'ATK',rarity:'legendary',val:[15,20]},
+  {name:'Cinder Vest',type:'armor',stat:'DEF',rarity:'common',val:[2,4]},
+  {name:'Thornwood Mail',type:'armor',stat:'DEF',rarity:'uncommon',val:[4,6]},
+  {name:'Shardknight Plate',type:'armor',stat:'DEF',rarity:'rare',val:[7,11]},
+  {name:'Void Carapace',type:'armor',stat:'DEF',rarity:'epic',val:[10,15]},
+  {name:'Ashen Ring',type:'accessor',stat:'CON',rarity:'uncommon',val:[2,5]},
+  {name:'Ring of Osserath',type:'accessor',stat:'STR',rarity:'rare',val:[4,7]},
+  {name:"Vaelundra's Eye",type:'accessor',stat:'INT',rarity:'legendary',val:[8,12]},
+  {name:'Health Potion',type:'consumable',stat:'HP',rarity:'common',val:[10,10]},
+  {name:'Greater Potion',type:'consumable',stat:'HP',rarity:'uncommon',val:[25,25]},
+];
+const RARITY_WEIGHT = {common:40,uncommon:30,rare:18,epic:9,legendary:3};
+
+// ══════════════════════════════════════════════════════════
+// GAME STATE
+// ══════════════════════════════════════════════════════════
+let char={}, inventory=[], adventureNum=0, activeAdv=null;
+let combatMobs=[], activeMobIdx=0, defending=false;
+let selectedClass=null, rolledStats={};
+// Exploration state
+let roomIdx=0, rooms=[], roomMobs=[];
+
+// Keep action bar tidy - hide empty sections
+function syncActionBar(){
+  const ea=document.getElementById('explore-actions');
+  const ar=document.getElementById('action-row');
+  if(ea) ea.style.display=ea.innerHTML.trim()?'flex':'none';
+  if(ar) ar.style.display=ar.innerHTML.trim()?'flex':'none';
+  // Scroll the internal game-log div to its bottom so latest content is visible
+  requestAnimationFrame(()=>{
+    requestAnimationFrame(()=>{
+      const gl=document.getElementById('game-log');
+      if(gl) gl.scrollTop=gl.scrollHeight;
+      // Also scroll page so the game-log card bottom is visible above the fixed overlays
+      const mobCard=document.getElementById('combat-mob-card');
+      const actionBar=document.getElementById('action-bar');
+      let ceiling=window.innerHeight;
+      if(mobCard&&mobCard.style.display!=='none'){const r=mobCard.getBoundingClientRect();ceiling=Math.min(ceiling,r.top);}
+      if(actionBar){const r=actionBar.getBoundingClientRect();ceiling=Math.min(ceiling,r.top);}
+      const logCard=document.getElementById('game-log-card');
+      if(logCard){
+        const r=logCard.getBoundingClientRect();
+        if(r.bottom>ceiling) window.scrollTo({top:window.scrollY+(r.bottom-ceiling)+8,behavior:'smooth'});
+      }
+    });
+  });
+}
+
+function toggleMap(){
+  const col=document.getElementById('map-collapsible');
+  const btn=document.getElementById('map-toggle-btn');
+  const open=col.style.display==='none';
+  col.style.display=open?'block':'none';
+  btn.innerHTML=open?'&#9650; Map':'&#9660; Map';
+}
+
+// ── Utils ──
+const rng=(min,max)=>Math.floor(Math.random()*(max-min+1))+min;
+const mod=v=>Math.floor((v-10)/2);
+const modStr=v=>{const m=mod(v);return (m>=0?'+':'')+m;};
+const rollDie=sides=>rng(1,sides);
+
+function rollStats(){
+  STATS.forEach(s=>{
+    const dice=[rollDie(6),rollDie(6),rollDie(6),rollDie(6)].sort((a,b)=>b-a).slice(0,3);
+    let total=dice.reduce((a,b)=>a+b,0);
+    if(selectedClass&&selectedClass.statBonus[s])total=Math.min(20,total+selectedClass.statBonus[s]);
+    rolledStats[s]=total;
+  });
+  renderStatGrid();
+}
+
+function renderStatGrid(){
+  document.getElementById('stat-grid').innerHTML=STATS.map(s=>`
+    <div class="stat-box"><div class="sn">${s}</div><div class="sv">${rolledStats[s]||'-'}</div><div class="sm">${rolledStats[s]?modStr(rolledStats[s]):''}</div></div>`).join('');
+}
+
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.getElementById('game-hud').style.display=id==='screen-game'?'block':'none';
+  window.scrollTo(0,0);
+}
+
+// ── Tooltip ──
+function buildClassGrid(){
+  document.getElementById('class-grid').innerHTML=ALL_CLASSES.map(c=>{
+    const locked=c.premium&&!hasTavernPass;
+    return `<div class="class-card${locked?' locked':''}" id="cc-${c.id}"
+      onclick="${locked?'showPremium()':'selectClass(\''+c.id+'\')'}"
+      onmouseenter="showTooltip(event,'${c.id}')"
+      onmouseleave="hideTooltip()"
+      ontouchstart="showTooltip(event,'${c.id}')"
+      ontouchend="hideTooltip()">
+      ${c.premium?'<span class="cc-lock">✦</span>':''}
+      <div class="cc-icon">${c.icon}</div>
+      <div class="cc-name">${c.name}</div>
+      <div class="cc-desc">${locked?'Tavern Pass':c.shortDesc}</div>
+    </div>`;
+  }).join('');
+}
+
+function showTooltip(e,id){
+  const cls=ALL_CLASSES.find(c=>c.id===id);
+  if(!cls)return;
+  const tt=document.getElementById('tooltip');
+  const locked=cls.premium&&!hasTavernPass;
+  tt.innerHTML=`
+    <h3>${cls.icon} ${cls.name}</h3>
+    <div class="tt-flavor">${cls.flavor}</div>
+    ${locked?'<div style="color:var(--gold);font-size:11px;font-family:var(--mono)">Requires Tavern Pass</div>':
+    '<div style="font-size:11px;color:var(--text3);font-family:var(--mono);margin-bottom:4px">KEY STATS</div>'+
+    cls.statInfo.map(si=>`
+      <div class="tt-stat">
+        <div><span class="sname">${si.stat}</span> <span class="swhy">- ${si.why}</span></div>
+      </div>`).join('')}`;
+  tt.style.display='block';
+  // Position relative to the card element so it always stays on screen
+  const card=document.getElementById('cc-'+id);
+  const rect=card?card.getBoundingClientRect():{left:0,top:0,right:0,bottom:0,width:0};
+  const ttW=Math.min(260, window.innerWidth-16);
+  const margin=8;
+  const vw=window.innerWidth;
+  const vh=window.innerHeight;
+  // Try right of card, then left, then centered below
+  let left=rect.right+margin;
+  if(left+ttW>vw-margin) left=rect.left-ttW-margin;
+  if(left<margin) left=Math.max(margin, (vw-ttW)/2);
+  tt.style.left=Math.round(left)+'px';
+  tt.style.top='0px';
+  const ttH=tt.offsetHeight||220;
+  // Try aligning with card top, then shift up if off bottom
+  let top=rect.top+window.scrollY;
+  if(rect.top+ttH>vh-margin) top=window.scrollY+vh-ttH-margin;
+  if(top<window.scrollY+margin) top=window.scrollY+margin;
+  tt.style.top=Math.round(top)+'px';
+  tt.style.maxWidth=ttW+'px';
+  document.getElementById('class-flavor-bar').textContent=cls.flavor.split('.')[0]+'.';
+}
+
+document.addEventListener('mousemove',e=>{
+  // On desktop, reposition tooltip to follow cursor if visible
+  const tt=document.getElementById('tooltip');
+  if(tt.style.display!=='block') return;
+  // Only track mouse (not touch - touch uses card bounds)
+  if(!e.clientX) return;
+  const ttW=parseInt(tt.style.maxWidth)||260;
+  const margin=8;
+  const vw=window.innerWidth;
+  const vh=window.innerHeight;
+  let left=e.clientX+14;
+  if(left+ttW>vw-margin) left=e.clientX-ttW-14;
+  if(left<margin) left=margin;
+  let top=e.clientY-20+window.scrollY;
+  const ttH=tt.offsetHeight||220;
+  if(e.clientY+ttH>vh-margin) top=window.scrollY+e.clientY-ttH-10;
+  if(top<window.scrollY+margin) top=window.scrollY+margin;
+  tt.style.left=Math.round(left)+'px';
+  tt.style.top=Math.round(top)+'px';
+});
+
+function hideTooltip(){document.getElementById('tooltip').style.display='none';document.getElementById('class-flavor-bar').textContent='';}
+
+function selectClass(id){
+  selectedClass=ALL_CLASSES.find(c=>c.id===id);
+  document.querySelectorAll('.class-card').forEach(el=>el.classList.remove('selected'));
+  document.getElementById('cc-'+id).classList.add('selected');
+  rollStats();
+}
+
+// ── Begin ──
+function beginAdventure(){
+  const name=document.getElementById('hero-name').value.trim();
+  document.getElementById('err-name').style.display=name?'none':'block';
+  document.getElementById('err-class').style.display=selectedClass?'none':'block';
+  if(!name||!selectedClass)return;
+  // Boosted starting HP: hpBase×2 + CON mod + roll, minimum 16
+  const maxHp=selectedClass.hpBase*2+mod(rolledStats.CON||10)+rollDie(selectedClass.hpBase);
+  char={name,cls:selectedClass,stats:{...rolledStats},maxHp:Math.max(maxHp,16),hp:Math.max(maxHp,16),xp:0,level:1,gold:0,bossesDefeated:0,dungeonsCompleted:0,title:null,abilityUsed:false,shadowstepActive:false,bardStunActive:false,defendStance:false};
+  inventory=[{name:'Health Potion',type:'consumable',stat:'HP',val:10,rarity:'common',count:4}];
+  adventureNum=0;
+  showScreen('screen-game');
+  renderCharPanel();
+  loadAdventure();
+}
+
+// ── Equipment helpers ──
+// Returns the best equipped item per slot (weapon, armor, accessor)
+function getEquipped(){
+  const weapon   = inventory.filter(i=>i.type==='weapon')  .sort((a,b)=>b.val-a.val)[0]||null;
+  const armor    = inventory.filter(i=>i.type==='armor')   .sort((a,b)=>b.val-a.val)[0]||null;
+  const accessor = inventory.filter(i=>i.type==='accessor').sort((a,b)=>b.val-a.val)[0]||null;
+  return {weapon,armor,accessor};
+}
+
+// Bonus ATK from best weapon
+function gearAtk(){
+  const {weapon}=getEquipped();
+  return weapon?weapon.val:0;
+}
+
+// Bonus DEF from best armor
+function gearDef(){
+  const {armor}=getEquipped();
+  return armor?armor.val:0;
+}
+
+// Merge new loot into inventory - auto-equip best, convert inferior duplicates to gold
+function addLootItem(item){
+  if(item.type==='consumable'){
+    const exist=inventory.find(i=>i.name===item.name&&i.type==='consumable');
+    if(exist)exist.count=(exist.count||1)+1;
+    else inventory.push({...item});
+    return {action:'stacked',item};
+  }
+  // For gear: keep if better than current best of that type, else sell for gold
+  const same=inventory.filter(i=>i.type===item.type).sort((a,b)=>b.val-a.val);
+  if(same.length===0){
+    inventory.push({...item,equipped:true});
+    return {action:'equipped',item};
+  }
+  const best=same[0];
+  if(item.val>best.val){
+    // New item is better - add it (becomes best), old best stays but is no longer top
+    inventory.push({...item});
+    const soldVal=Math.floor(best.val*3);
+    // Don't auto-sell the old best - player keeps full inventory but we flag the new one
+    return {action:'upgraded',item,old:best};
+  } else {
+    // Inferior - convert to gold automatically
+    const goldGain=Math.max(1,Math.floor(item.val*2));
+    char.gold+=goldGain;
+    return {action:'sold',item,goldGain};
+  }
+}
+
+function renderHUD(){
+  if(!char||!char.name) return;
+  const pct=Math.max(0,Math.round(char.hp/char.maxHp*100));
+  const bc=pct>50?'full':pct>25?'mid':'low';
+  const potCount=inventory.filter(i=>i.type==='consumable').reduce((a,b)=>a+(b.count||1),0);
+  const el=n=>document.getElementById(n);
+  if(el('hud-name')) el('hud-name').textContent=char.cls.icon+' '+char.name+' Lv'+char.level;
+  if(el('hud-hp')) el('hud-hp').textContent='HP '+char.hp+'/'+char.maxHp;
+  if(el('hud-hp-fill')){el('hud-hp-fill').style.width=pct+'%';el('hud-hp-fill').className='hp-fill '+bc;}
+  if(el('hud-potion-btn')){
+    el('hud-potion-btn').textContent=potCount>0?'🧪 ×'+potCount:'No potions';
+    el('hud-potion-btn').disabled=potCount<=0||char.hp>=char.maxHp;
+  }
+}
+
+// ── Char panel ──
+function renderCharPanel(){
+  const pct=Math.max(0,Math.round(char.hp/char.maxHp*100));
+  const bc=pct>50?'full':pct>25?'mid':'low';
+  const titleStr=char.title?` <span style="color:var(--gold);font-size:11px;font-family:var(--mono)">[${char.title}]</span>`:'';
+  const {weapon,armor,accessor}=getEquipped();
+  const atkBonus=gearAtk(); const defBonus=gearDef();
+  const gearLine=atkBonus||defBonus
+    ? `<span style="font-size:11px;color:var(--text2);font-family:var(--mono)">`
+      +(atkBonus?`⚔ ATK +${atkBonus} `:'')+( defBonus?`🛡 DEF +${defBonus}`:'')
+      +`</span>` : '';
+
+  const consumables=inventory.filter(i=>i.type==='consumable');
+  const allGear=inventory.filter(i=>i.type!=='consumable');
+  const ability=char.cls.ability;
+  const potCount=consumables.reduce((a,i)=>a+(i.count||1),0);
+
+  document.getElementById('char-panel').innerHTML=`
+    <div style="display:flex;justify-content:space-between;align-items:flex-start">
+      <div><h2 style="font-size:16px;color:var(--text)">${char.cls.icon} ${char.name}${titleStr}</h2>
+      <div class="sub" style="margin-bottom:2px">${char.cls.name} · Lv ${char.level} · ${char.xp} XP · ${char.gold} gp</div>
+      ${gearLine}</div>
+      <div style="display:flex;gap:6px">
+        <button class="btn sm" onclick="toggleInventory()">Bag</button>
+        <button class="btn sm" onclick="showPremium()">✦</button>
+      </div>
+    </div>
+    <div style="font-size:12px;color:var(--text2);display:flex;gap:8px;align-items:center;margin-top:4px">
+      <span style="font-family:var(--mono)">HP ${char.hp}/${char.maxHp}</span>
+      <div class="hp-bar" style="flex:1"><div class="hp-fill ${bc}" style="width:${pct}%"></div></div>
+      ${potCount>0?`<button class="btn sm" style="font-size:11px;white-space:nowrap" onclick="drinkPotionOutsideCombat()" title="Use a potion now">🧪 ×${potCount}</button>`:''}
+    </div>
+    <div class="stat-grid" style="margin-top:8px">
+      ${STATS.map(s=>`<div class="stat-box"><div class="sn">${s}</div><div class="sv" style="font-size:15px">${char.stats[s]}</div><div class="sm">${modStr(char.stats[s])}</div></div>`).join('')}
+    </div>
+    <div style="background:var(--bg3);border:0.5px solid var(--border);border-radius:var(--radius);padding:8px 10px;margin-top:8px;font-size:12px">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <span style="color:var(--gold);font-family:var(--mono);font-size:11px">⚡ ${ability.name} <span style="color:var(--text3)">${char.abilityUsed?'· used this room':'· ready'}</span></span>
+      </div>
+      <div style="color:var(--text2);margin-top:2px;line-height:1.5">${ability.desc}</div>
+    </div>
+    <div id="inv-area" style="display:none;margin-top:10px">
+      <div class="section-label">Equipped</div>
+      <div class="inv-grid">
+        <div class="inv-item" style="${weapon?'border-color:var(--gold)':'opacity:0.4'}">
+          <div class="in">⚔ ${weapon?weapon.name:'- No weapon'}</div>
+          <div class="is">${weapon?'ATK +'+weapon.val+' · '+weapon.rarity:'unequipped'}</div>
+        </div>
+        <div class="inv-item" style="${armor?'border-color:var(--blue)':'opacity:0.4'}">
+          <div class="in">🛡 ${armor?armor.name:'- No armor'}</div>
+          <div class="is">${armor?'DEF +'+armor.val+' · '+armor.rarity:'unequipped'}</div>
+        </div>
+        <div class="inv-item" style="${accessor?'border-color:var(--purple)':'opacity:0.4'}">
+          <div class="in">💍 ${accessor?accessor.name:'- No accessory'}</div>
+          <div class="is">${accessor?accessor.stat+' +'+accessor.val+' · '+accessor.rarity:'unequipped'}</div>
+        </div>
+      </div>
+      ${allGear.length>3?`
+      <div class="section-label">Other gear <span style="color:var(--text3)">(weaker items auto-sell on pickup)</span></div>
+      <div class="inv-grid">${allGear.filter(g=>g!==weapon&&g!==armor&&g!==accessor).map(it=>`
+        <div class="inv-item"><div class="in">${it.name}</div>
+        <div class="is">${it.stat||it.type} +${it.val} · ${it.rarity}</div></div>`).join('')}
+      </div>`:''}
+      <div class="section-label">Consumables</div>
+      <div class="inv-grid">${consumables.length?consumables.map(it=>`
+        <div class="inv-item"><div class="in">${it.name}${it.count>1?' ×'+it.count:''}</div>
+        <div class="is">Restore ${it.val} HP · any time</div></div>`).join('')
+        :'<div style="font-size:12px;color:var(--text3);padding:4px">No potions remaining</div>'}
+      </div>
+    </div>`;
+  renderHUD();
+}
+
+// Use potion outside combat - heals but costs a turn (no enemy retaliation)
+function drinkPotionOutsideCombat(){
+  if(char.hp>=char.maxHp){
+    showToast('You are already at full health - potion saved.');
+    return;
+  }
+  const pot=inventory.find(i=>i.type==='consumable'&&(i.count||1)>0);
+  if(!pot){showToast('No potions remaining.');return;}
+  pot.count=(pot.count||1)-1;
+  if(pot.count<=0)inventory=inventory.filter(i=>i!==pot);
+  const heal=Math.min(pot.val||10,char.maxHp-char.hp);
+  char.hp+=heal;
+  showToast('You drink a '+pot.name+' and recover '+heal+' HP. ('+char.hp+'/'+char.maxHp+')');
+  renderCharPanel(); // also calls renderHUD
+}
+
+function showToast(msg, duration=3000){
+  let t=document.getElementById('toast');
+  if(!t){
+    t=document.createElement('div');
+    t.id='toast';
+    t.style.cssText='position:fixed;bottom:70px;left:50%;transform:translateX(-50%);background:var(--bg3);border:0.5px solid var(--gold);border-radius:8px;padding:8px 16px;font-size:12px;font-family:var(--mono);color:var(--text);z-index:300;pointer-events:none;transition:opacity 0.4s';
+    document.body.appendChild(t);
+  }
+  t.textContent=msg;
+  t.style.opacity='1';
+  clearTimeout(t._timer);
+  t._timer=setTimeout(()=>t.style.opacity='0', duration);
+}
+
+function toggleInventory(){
+  const a=document.getElementById('inv-area');
+  a.style.display=a.style.display==='none'?'block':'none';
+}
+
+// ══════════════════════════════════════════════════════════
+// EXPLORATION ENGINE - 3 floors x 5 rooms = 15 rooms
+// ══════════════════════════════════════════════════════════
+let currentFloor = 1;
+let allRooms = [];
+
+function scaleMob(m, floorNum, lvl){
+  const clone = {...m};
+  if(floorNum===1){
+    clone.hp = Math.floor((rng(6,10)+lvl*2)*0.65);
+    clone.atk = Math.max(2, Math.floor(clone.atk*0.70)); // min atk 2, slightly higher
+  } else if(floorNum===2){
+    clone.hp = rng(12,18)+lvl*3;
+    clone.atk = Math.max(1, Math.floor(clone.atk*0.85)); // tighter to full strength
+  } else {
+    const isBoss = clone.type==='boss';
+    const isMini = clone.type==='miniboss';
+    if(isBoss){
+      clone.hp = rng(38,50)+lvl*10; // was 28-38, bumped up
+      clone.atk = Math.floor(clone.atk*0.65)+Math.floor(lvl*0.5); // slightly higher
+    } else if(isMini){
+      clone.hp = rng(24,32)+lvl*5; // was 18-26, bumped up
+      clone.atk = Math.floor(clone.atk*0.75)+Math.floor(lvl*0.4);
+    } else {
+      clone.hp = rng(14,20)+lvl*4;
+    }
+  }
+  if(clone.type==='miniboss' && floorNum<3){
+    clone.hp = rng(18,26)+lvl*4; // was 14-20, bumped up
+    clone.atk = Math.floor(clone.atk*0.70)+Math.floor(lvl*0.3);
+  }
+  clone.maxHp = clone.hp;
+  return clone;
+}
+
+function loadAdventure(){
+  adventureNum++;
+  const idx=(adventureNum-1)%ADVENTURES.length;
+  activeAdv=JSON.parse(JSON.stringify(ADVENTURES[idx]));
+  const lvl=char.level;
+
+  allRooms=[];
+  activeAdv.floors.forEach(floor=>{
+    floor.rooms.forEach(room=>{
+      const scaledMobs = room.combatRoom && room.mobs
+        ? room.mobs.map(m=>scaleMob(m, floor.floorNum, lvl))
+        : [];
+      allRooms.push({
+        floor: floor.floorNum,
+        floorName: floor.floorName,
+        floorIntro: floor.floorIntro,
+        ...room,
+        mobs: scaledMobs,
+      });
+    });
+  });
+  rooms=allRooms;
+  roomIdx=0; currentFloor=1;
+  char.abilityUsed=false;
+  char.shadowstepActive=false;
+  char.bardStunActive=false;
+  char.defendStance=false;
+
+  document.getElementById('adv-title').textContent=activeAdv.title;
+  document.getElementById('adv-region').textContent=WORLD_REGIONS[activeAdv.region]+' · Adventure '+adventureNum;
+  document.getElementById('dungeon-map').textContent=activeAdv.map;
+  document.getElementById('map-legend').textContent=activeAdv.legend;
+  document.getElementById('map-collapsible').style.display='none'; // start collapsed
+  document.getElementById('map-toggle-btn').style.display='';
+  document.getElementById('map-toggle-btn').innerHTML='&#9660; Map';
+  document.getElementById('room-progress-label').style.display='block';
+  document.getElementById('game-log').innerHTML=''; // clear log for new dungeon
+  document.getElementById('combat-mob-card').style.display='none';
+  // Clear transition card ID so it gets re-created fresh
+  const oldCard=document.getElementById('floor-transition-card');
+  if(oldCard) oldCard.removeAttribute('id');
+
+  renderRoomDots();
+  renderRoom();
+}
+
+function renderRoomDots(){
+  const container=document.getElementById('room-dots');
+  container.style.display='flex';
+  let html='';
+  let lastFloor=0;
+  rooms.forEach((r,i)=>{
+    if(r.floor!==lastFloor){
+      if(lastFloor>0) html+=`<div style="width:1px;height:12px;background:var(--gold);opacity:0.4;margin:0 3px;align-self:center"></div>`;
+      lastFloor=r.floor;
+    }
+    const isBoss=r.isBoss; const isMini=r.isMini;
+    let cls='rdot';
+    if(isBoss) cls+=' boss-dot';
+    else if(isMini) cls+=' boss-dot';
+    if(i<roomIdx) cls+=' done';
+    else if(i===roomIdx) cls+=' current';
+    html+=`<div class="${cls}" title="F${r.floor}: ${r.type}"></div>`;
+  });
+  container.innerHTML=html;
+}
+
+function renderRoom(){
+  const room=rooms[roomIdx];
+  if(!room){endDungeon();return;}
+
+  const log=document.getElementById('game-log');
+  const floorColor=room.floor===3?'var(--red)':room.floor===2?'var(--gold)':'var(--text3)';
+  const roomLabel=room.isBoss?'BOSS CHAMBER':room.isMini?'MINI-BOSS':room.combatRoom?'COMBAT ROOM':'EXPLORATION';
+
+  const section=document.createElement('div');
+  section.className='gl-narr';
+  section.innerHTML=`
+    <div class="gl-floor" style="color:${floorColor}">${room.floorName.toUpperCase()} &middot; ${room.type.toUpperCase()} &middot; ${roomLabel}</div>
+    ${(room.texts||[]).map(t=>`<p>${t}</p>`).join('')}
+    ${room.sound?`<p class="gl-sound">&#128066; ${room.sound}</p>`:''}
+    ${roomIdx>0&&room.discover&&room.combatRoom?`<p class="gl-discover">&#9888; ${room.discover}</p>`:''}`;
+  log.appendChild(section);
+
+  const actionLabel = room.action||(room.combatRoom?'Fight':'Continue');
+  const actionBtn = room.combatRoom
+    ? `<button class="btn gold" onclick="enterRoom()">${actionLabel}</button>`
+    : `<button class="btn gold" onclick="passRoom()">${actionLabel}</button>`;
+  document.getElementById('explore-actions').innerHTML=actionBtn;
+  document.getElementById('action-row').innerHTML='';
+  renderRoomDots();
+  requestAnimationFrame(syncActionBar);
+}
+
+function passRoom(){
+  roomIdx++;
+  handleRoomAdvance();
+}
+
+function enterRoom(){
+  const room=rooms[roomIdx];
+  if(!room||!room.combatRoom)return;
+  combatMobs=room.mobs.map(m=>({...m}));
+  activeMobIdx=0; defending=false;
+  document.getElementById('combat-mob-card').style.display='block';
+  const title=room.isBoss?'FINAL BOSS':room.isMini?'MINI-BOSS':'COMBAT';
+  const sep=document.createElement('div');
+  sep.className='gl-section';
+  sep.textContent=title;
+  document.getElementById('game-log').appendChild(sep);
+  glog('sys','You face: '+combatMobs.map(m=>m.name).join(', '));
+  renderCombat();
+}
+
+function roomClear(){
+  document.getElementById('combat-mob-card').style.display='none';
+  char.abilityUsed=false;
+  char.defendStance=false;
+  // 25% chance of potion drop
+  if(Math.random()<0.25){
+    const exist=inventory.find(i=>i.name==='Health Potion'&&i.type==='consumable');
+    if(exist) exist.count=(exist.count||1)+1;
+    else inventory.push({name:'Health Potion',type:'consumable',stat:'HP',val:10,rarity:'common',count:1});
+    glog('loot','You find a Health Potion among the fallen.');
+  }
+  // Mini-boss drops guaranteed potion + gear
+  const justCleared=rooms[roomIdx];
+  if(justCleared&&justCleared.isMini){
+    const exist=inventory.find(i=>i.name==='Health Potion'&&i.type==='consumable');
+    if(exist) exist.count=(exist.count||1)+1;
+    else inventory.push({name:'Health Potion',type:'consumable',stat:'HP',val:10,rarity:'common',count:1});
+    glog('loot','The mini-boss drops a Health Potion.');
+    // Mini-boss guaranteed uncommon+ gear drop
+    dropMidDungeonLoot('miniboss');
+  } else if(justCleared&&justCleared.combatRoom&&Math.random()<0.35){
+    // 35% chance of gear drop from regular combat rooms
+    dropMidDungeonLoot('regular');
+  }
+  renderCharPanel();
+  roomIdx++;
+  handleRoomAdvance();
+}
+
+function handleRoomAdvance(){
+  if(roomIdx>=rooms.length){endDungeon();return;}
+  const nextRoom=rooms[roomIdx];
+  const prevRoom=rooms[roomIdx-1];
+  const isFloorTransition = prevRoom && nextRoom.floor!==prevRoom.floor;
+  if(isFloorTransition){
+    currentFloor=nextRoom.floor;
+    showFloorTransition(prevRoom.floor, nextRoom);
+  } else if(prevRoom && prevRoom.combatRoom){
+    showBetweenRoomRest(nextRoom);
+  } else {
+    renderRoom();
+    window.scrollTo(0,0);
+  }
+}
+
+// Drop loot mid-dungeon and append to game log
+function dropMidDungeonLoot(tier){
+  const rc={common:'r-common',uncommon:'r-uncommon',rare:'r-rare',epic:'r-epic',legendary:'r-legendary'};
+  const weights = tier==='miniboss'
+    ? {common:10,uncommon:45,rare:35,epic:8,legendary:2}
+    : {common:40,uncommon:35,rare:20,epic:4,legendary:1};
+  const total=Object.values(weights).reduce((a,b)=>a+b,0);
+  let r=rng(1,total),acc=0;
+  let rarity='common';
+  for(const[name,wt]of Object.entries(weights)){acc+=wt;if(r<=acc){rarity=name;break;}}
+  const pool=LOOT.filter(l=>l.rarity===rarity&&l.type!=='consumable');
+  if(!pool.length)return;
+  const tpl=pool[Math.floor(Math.random()*pool.length)];
+  const val=Array.isArray(tpl.val)?rng(tpl.val[0],tpl.val[1]):tpl.val;
+  const item={...tpl,val,count:1};
+  const result=addLootItem(item);
+  const log=document.getElementById('game-log');
+  const row=document.createElement('div');
+  row.className='gl-loot-item';
+  const actionText=result.action==='sold'?`sold for ${result.goldGain} gp`:result.action==='upgraded'?'equipped (upgrade)':'added to bag';
+  row.innerHTML=`<span style="color:var(--purple)">&#10022; ${item.name}</span><span style="font-size:11px;color:var(--text2);font-family:var(--mono)">${item.stat} +${val}</span><span class="rarity ${rc[rarity]}">${rarity}</span><span style="font-size:11px;color:var(--text3);font-family:var(--mono)">${actionText}</span>`;
+  log.appendChild(row);
+}
+
+function showBetweenRoomRest(nextRoom){
+  const restHeal=Math.max(3,Math.floor(char.maxHp*0.12)+mod(char.stats.CON));
+  const isBossNext=nextRoom.isBoss;
+  const isMiniNext=nextRoom.isMini;
+  const noteColor=isBossNext?'var(--red)':isMiniNext?'var(--gold)':'var(--text3)';
+  const note=isBossNext
+    ?'The boss chamber lies ahead. Rest while you can.'
+    :isMiniNext
+    ?'A powerful guardian waits in the next room.'
+    :'You have a moment before pressing on.';
+
+  const log=document.getElementById('game-log');
+  const div=document.createElement('div');
+  div.innerHTML=`<hr class="gl-divider"><p style="font-size:12px;color:${noteColor};font-family:var(--mono);margin:4px 0">${note} HP: ${char.hp}/${char.maxHp}</p>`;
+  log.appendChild(div);
+
+  document.getElementById('explore-actions').innerHTML=`
+    <button class="btn" onclick="doBetweenRoomRest(${restHeal})">Rest (+${restHeal} HP)</button>
+    <button class="btn gold" onclick="skipRestAndContinue()">Press on</button>`;
+  document.getElementById('action-row').innerHTML='';
+  requestAnimationFrame(syncActionBar);
+}
+
+function doBetweenRoomRest(heal){
+  const was=char.hp;
+  char.hp=Math.min(char.maxHp, char.hp+heal);
+  const got=char.hp-was;
+  renderCharPanel();
+  if(got>0) showToast('You rest and recover '+got+' HP. ('+char.hp+'/'+char.maxHp+')', 3000);
+  else showToast('Already at full health.', 3000);
+  skipRestAndContinue();
+}
+
+function skipRestAndContinue(){
+  renderRoom();
+}
+
+function showFloorTransition(fromFloor, nextRoom){
+  const healPct=nextRoom.floor===3?0.30:0.20;
+  const restHeal=Math.max(5,Math.floor(char.maxHp*healPct)+mod(char.stats.CON));
+  const potCost=15+char.level*5;
+  const floorColor=nextRoom.floor===3?'var(--red)':'var(--gold)';
+
+  // Only append the card once - subsequent calls just refresh the stats line
+  const existingCard=document.getElementById('floor-transition-card');
+  if(!existingCard){
+    const log=document.getElementById('game-log');
+    const div=document.createElement('div');
+    div.className='gl-transition';
+    div.id='floor-transition-card';
+    div.innerHTML=`<div class="gt-title" style="color:${floorColor}">ENTERING ${nextRoom.floorName.toUpperCase()}</div>
+      <p>${nextRoom.floorIntro}</p>
+      ${nextRoom.floor===3?'<p style="color:var(--red);font-size:12px">This is the final floor. Beyond this point there is no retreat.</p>':''}
+      <p id="floor-transition-stats" style="font-size:11px;color:var(--text3);font-family:var(--mono);margin-top:6px"></p>`;
+    log.appendChild(div);
+  }
+  // Always refresh the stats line with current values
+  const statsEl=document.getElementById('floor-transition-stats');
+  const potCount=inventory.filter(i=>i.type==='consumable').reduce((a,i)=>a+(i.count||1),0);
+  if(statsEl) statsEl.innerHTML=`Class ability restored each room &middot; HP: ${char.hp}/${char.maxHp} &middot; Potions: ${potCount} &middot; Gold: ${char.gold} gp`;
+
+  document.getElementById('explore-actions').innerHTML=`
+    <button class="btn" onclick="doFloorRest(${restHeal})">Rest (+${restHeal} HP)</button>
+    <button class="btn" onclick="buyPotionAtTransition(${potCost})" ${char.gold>=potCost?'':'disabled'}>Buy Potion (${potCost} gp)</button>
+    <button class="btn sm" onclick="saveAndStay()">Save</button>
+    <button class="btn gold" onclick="advanceRoom()">Descend to ${nextRoom.floorName}</button>`;
+  document.getElementById('action-row').innerHTML='';
+  requestAnimationFrame(syncActionBar);
+}
+
+function doFloorRest(heal){
+  const was=char.hp;
+  char.hp=Math.min(char.maxHp,char.hp+heal);
+  const got=char.hp-was;
+  renderCharPanel();
+  autoSave();
+  showToast(got>0?'You rest and recover '+got+' HP. ('+char.hp+'/'+char.maxHp+')':'Already at full health.', 3000);
+  // Refresh stats line only - don't re-append the card
+  const nextRoom=rooms[roomIdx];
+  const potCount=inventory.filter(i=>i.type==='consumable').reduce((a,i)=>a+(i.count||1),0);
+  const statsEl=document.getElementById('floor-transition-stats');
+  if(statsEl) statsEl.innerHTML=`Class ability restored each room &middot; HP: ${char.hp}/${char.maxHp} &middot; Potions: ${potCount} &middot; Gold: ${char.gold} gp`;
+  // Refresh button states (potion cost may have changed affordability)
+  const potCost=15+char.level*5;
+  showFloorTransition(currentFloor-1, nextRoom);
+}
+
+function buyPotionAtTransition(cost){
+  if(char.gold<cost){showToast('Not enough gold - need '+cost+' gp.');return;}
+  char.gold-=cost;
+  const exist=inventory.find(i=>i.name==='Health Potion'&&i.type==='consumable');
+  if(exist) exist.count=(exist.count||1)+1;
+  else inventory.push({name:'Health Potion',type:'consumable',stat:'HP',val:10,rarity:'common',count:1});
+  renderCharPanel();
+  showToast('Potion purchased! ('+char.gold+' gp remaining)');
+  // If we're at the loot screen (roomIdx past end of rooms), just refresh the merchant display
+  const nextRoom=rooms[roomIdx];
+  if(!nextRoom){
+    renderLootMerchant(cost);
+  } else {
+    showFloorTransition(currentFloor-1, nextRoom);
+  }
+}
+
+function renderLootMerchant(cost){
+  const potCost=cost||(15+char.level*5);
+  const canAfford=char.gold>=potCost;
+  const potCount=inventory.filter(i=>i.type==='consumable').reduce((a,i)=>a+(i.count||1),0);
+  const el=document.getElementById('loot-merchant-line');
+  if(el) el.innerHTML=`Traveling Merchant &nbsp;&middot;&nbsp; Potions in bag: ${potCount} &nbsp;&middot;&nbsp; Gold: ${char.gold} gp<br>
+    <button class="btn sm" onclick="buyPotionAtTransition(${potCost})" ${canAfford?'':'disabled'} style="margin-top:6px">Buy Potion (${potCost} gp)</button>`;
+}
+
+function saveAndStay(){autoSave();showToast('Progress saved.');}
+
+function advanceRoom(){renderRoom();}
+
+function endDungeon(){
+  char.dungeonsCompleted++;
+  checkTitles();
+  generateLoot();
+}
+
+function nextAdventure(){renderCharPanel();loadAdventure();}
+
+// ══════════════════════════════════════════════════════════
+// COMBAT ENGINE
+// ══════════════════════════════════════════════════════════
+// Append a line to the unified game log
+function glog(cls, msg){
+  const log=document.getElementById('game-log');
+  const p=document.createElement('p');
+  p.className='gl-c-'+cls;
+  p.textContent=msg;
+  log.appendChild(p);
+}
+// Legacy alias used throughout combat code
+function clog(cls,msg){glog(cls,msg);syncActionBar();}
+
+function renderCombat(){
+  const m=combatMobs[activeMobIdx];
+  if(!m){checkRoomClear();return;}
+  const pct=Math.max(0,Math.round(m.hp/m.maxHp*100));
+  const bc=pct>50?'full':pct>25?'mid':'low';
+  document.getElementById('combat-mob-display').innerHTML=`
+    <div class="mob-card">
+      <div class="mob-name">
+        <span>${m.name} ${m.type==='boss'?'&#128081;':''}</span>
+        <div style="display:flex;gap:6px;align-items:center">
+          <span style="font-size:11px;font-family:var(--mono);color:var(--text2)">HP ${m.hp}/${m.maxHp}</span>
+          <span class="badge ${m.type}">${m.type}</span>
+        </div>
+      </div>
+      <div class="hp-bar"><div class="hp-fill ${bc}" style="width:${pct}%"></div></div>
+      ${combatMobs.length>1?`<div style="font-size:11px;color:var(--text3);font-family:var(--mono);margin-top:4px">Enemy ${activeMobIdx+1} of ${combatMobs.length}</div>`:''}
+    </div>`;
+  const hasPot=inventory.some(i=>i.name.includes('Potion')&&(i.count||1)>0);
+  const ability=char.cls.ability;
+  const abilityUsed=char.abilityUsed;
+  const attackLabel=char.defendStance ? `Attack [+2]` : `Attack`;
+  const attackStyle=char.defendStance
+    ? `style="background:var(--gold);color:#1a1400;border-color:var(--gold);font-weight:bold"`
+    : ``;
+  document.getElementById('action-row').innerHTML=`
+    <button class="btn gold" onclick="doAttack()" ${attackStyle}>${attackLabel}</button>
+    <button class="btn" onclick="doDefend()">Defend</button>
+    <button class="btn" onclick="doPotion()" ${hasPot?'':'disabled'}>${hasPot?'Potion':'No potions'}</button>
+    <button class="btn" onclick="doAbility()" ${abilityUsed?'disabled':''} style="color:var(--gold);border-color:var(--gold)">${ability.icon} ${ability.name}${abilityUsed?' (used)':''}</button>
+    <button class="btn danger" onclick="doFlee()">Flee</button>`;
+  document.getElementById('explore-actions').innerHTML='';
+  syncActionBar();
+}
+
+// Tanky classes recover HP when defending: 1d4 + floor(level/2)
+function getDefendRegen(){
+  const tankClasses=['warrior','paladin','cleric'];
+  if(!tankClasses.includes(char.cls.id)) return 0;
+  return rollDie(4)+Math.floor(char.level/2);
+}
+
+function checkRoomClear(){
+  if(combatMobs.every(m=>m.hp<=0)||activeMobIdx>=combatMobs.length){
+    clog('head','✦ The way is clear. You press deeper into the dungeon.');
+    document.getElementById('action-row').innerHTML=`<button class="btn gold" onclick="roomClear()">Continue exploring</button>`;
+    document.getElementById('explore-actions').innerHTML='';
+    syncActionBar();
+  }
+}
+
+function doAttack(){
+  defending=false;
+  const m=combatMobs[activeMobIdx];
+  const strMod=mod(char.stats.STR);
+  const atkBonus=Math.floor(gearAtk()/2);
+  const stanceBonus=char.defendStance?2:0;
+  char.defendStance=false;
+  const roll=rollDie(20)+strMod+stanceBonus;
+  // Miss threshold: starts at 5, improves by 1 every 3 levels (so level 3 = need 4+, level 6 = need 3+)
+  const missThreshold=Math.max(2, 5-Math.floor(char.level/3));
+  if(roll<missThreshold){clog('warn','You swing wide - a miss!');enemyTurn();return;}
+  const crit=roll>=20;
+  const dmg=Math.max(1,rollDie(8)+strMod+atkBonus+stanceBonus+(crit?rollDie(6):0));
+  m.hp=Math.max(0,m.hp-dmg);
+  const stanceNote=stanceBonus>0?' [stance +'+stanceBonus+']':'';
+  clog(crit?'head':'hit',(crit?'CRITICAL HIT! ':'')+'You strike '+m.name+' for '+dmg+' damage! (HP '+m.hp+'/'+m.maxHp+')'+(atkBonus?` [+${atkBonus}]`:'')+stanceNote);
+  if(m.hp<=0){killMob();return;}
+  enemyTurn();
+}
+
+function doDefend(){
+  if(char.defendStance){
+    char.defendStance=false;
+    clog('warn','Your attack stance fades unused - you defend again instead.');
+  }
+  defending=true;
+  char.defendStance=true;
+  const regen=getDefendRegen();
+  let msg='You take a defensive stance - incoming damage halved, +2 bonus on your next attack.';
+  if(regen>0&&char.hp<char.maxHp){
+    char.hp=Math.min(char.maxHp,char.hp+regen);
+    msg+=' You recover '+regen+' HP. ('+char.hp+'/'+char.maxHp+')';
+    renderCharPanel();
+  } else if(regen>0){
+    msg+=' You are already at full health.';
+  }
+  clog('hit',msg);
+  enemyTurn();
+}
+
+function doPotion(){
+  if(char.hp>=char.maxHp){clog('warn','Your wounds are already closed - no need for a potion.');return;}
+  if(char.defendStance){char.defendStance=false;clog('warn','Attack stance fades - you reached for a potion instead.');}
+  const pot=inventory.find(i=>i.name.includes('Potion')&&(i.count||1)>0);
+  if(!pot){clog('warn','No potions remaining.');return;}
+  pot.count=(pot.count||1)-1;
+  if(pot.count<=0)inventory=inventory.filter(i=>i!==pot);
+  const heal=Math.min(pot.val||10,char.maxHp-char.hp);
+  char.hp+=heal;
+  clog('hit','You drink '+pot.name+' - restored '+heal+' HP! ('+char.hp+'/'+char.maxHp+')');
+  renderCharPanel();
+  enemyTurn();
+}
+
+function doAbility(){
+  if(char.abilityUsed){clog('warn','Ability already used this room.');return;}
+  if(char.defendStance){char.defendStance=false;clog('warn','Attack stance fades - you used your ability instead.');}
+  const m=combatMobs[activeMobIdx];
+  const ability=char.cls.ability;
+  // Some abilities need the current mob (damage+heal); pass it if available
+  // For pure-heal abilities (non-damage classes), block if already full
+  const healOnlyClasses=['warrior','cleric','ranger','paladin','druid','bard'];
+  if(healOnlyClasses.includes(char.cls.id)&&char.hp>=char.maxHp){
+    clog('warn','You are already at full health - ability saved for when you need it.');
+    return;
+  }
+  let result='';
+  try{ result=ability.use(char,m||{hp:0,maxHp:0,name:'target'}); }
+  catch(e){ result='The ability fizzles.'; }
+  char.abilityUsed=true;
+  // Special: Shadowstep sets auto-dodge for next enemy attack
+  if(char.cls.id==='rogue')char.shadowstepActive=true;
+  // Special: Bard resonance stuns enemy
+  if(char.cls.id==='bard')char.bardStunActive=true;
+  clog('hit','⚡ '+ability.name+': '+result);
+  if(m&&m.hp<=0){killMob();return;}
+  renderCharPanel();
+  enemyTurn();
+}
+
+function doFlee(){
+  if(rollDie(6)+mod(char.stats.DEX)>3){
+    clog('warn','You retreat from the fight!');
+    document.getElementById('combat-mob-card').style.display='none';
+    document.getElementById('action-row').innerHTML='';
+    document.getElementById('explore-actions').innerHTML='';
+    syncActionBar();
+    renderRoom();
+  } else {
+    clog('dmg','Flee failed! The enemy blocks your retreat.');
+    enemyTurn();
+  }
+}
+
+function enemyTurn(){
+  const m=combatMobs[activeMobIdx];
+  if(!m||m.hp<=0)return;
+  // Bard stun check
+  if(char.bardStunActive){
+    char.bardStunActive=false;
+    clog('warn',m.name+' is stunned by the resonance and loses their attack!');
+    renderCombat(); return;
+  }
+  // Shadowstep auto-dodge
+  if(char.shadowstepActive){
+    char.shadowstepActive=false;
+    clog('hit','You are still in shadow - the attack passes through empty air!');
+    renderCharPanel(); renderCombat(); return;
+  }
+  const dodge=rollDie(20)+mod(char.stats.DEX);
+  if(dodge>=18){clog('hit','You dodge the attack!');renderCharPanel();renderCombat();return;}
+  const defBonus=gearDef();
+  const defReduction=Math.floor(defBonus/4);
+  const stanceDefBonus=char.defendStance?1:0;
+  let dmg=Math.max(2, rollDie(6)+m.atk - mod(char.stats.CON) - defReduction - stanceDefBonus);
+  if(defending)dmg=Math.max(1,Math.floor(dmg/2));
+  char.hp=Math.max(0,char.hp-dmg);
+  const shieldNote=defReduction||stanceDefBonus?` [-${defReduction+stanceDefBonus}]`:'';
+  clog('dmg',m.name+' hits you for '+dmg+' damage! ('+char.hp+'/'+char.maxHp+')'+shieldNote);
+  defending=false;
+  renderCharPanel();
+  if(char.hp<=0){playerDead();return;}
+  renderCombat();
+}
+
+function killMob(){
+  const m=combatMobs[activeMobIdx];
+  // Force HP to 0 and re-render mob display so bar shows dead state
+  m.hp=0;
+  document.getElementById('combat-mob-display').innerHTML=`
+    <div class="mob-card" style="opacity:0.5">
+      <div class="mob-name">
+        <span>${m.name} <span style="font-size:11px;color:var(--red);font-family:var(--mono)">DEFEATED</span></span>
+        <span style="font-size:11px;font-family:var(--mono);color:var(--text2)">HP 0/${m.maxHp}</span>
+      </div>
+      <div class="hp-bar"><div class="hp-fill low" style="width:0%"></div></div>
+    </div>`;
+  const gpGain=rng(m.gold,m.gold*2);
+  char.xp+=m.xp; char.gold+=gpGain;
+  if(m.type==='boss')char.bossesDefeated++;
+  clog('loot','✦ '+m.name+' defeated! +'+m.xp+' XP +'+gpGain+' gp');
+  checkLevelUp();
+  activeMobIdx++;
+  if(activeMobIdx>=combatMobs.length){checkRoomClear();}
+  else{setTimeout(()=>{clog('head','Next: '+combatMobs[activeMobIdx].name);renderCombat();},400);}
+  renderCharPanel();
+}
+
+function checkLevelUp(){
+  // XP required grows exponentially: 150, 350, 650, 1100, 1700, 2500...
+  const needed = Math.floor(150 * Math.pow(char.level, 1.6));
+  if(char.xp>=needed){
+    char.level++;
+    const hpGain=rollDie(char.cls.hpBase)+mod(char.stats.CON);
+    char.maxHp+=Math.max(1,hpGain); char.hp=char.maxHp;
+    clog('head','✨ LEVEL UP! Now level '+char.level+'. HP fully restored to '+char.hp+'!');
+    checkTitles();
+  }
+}
+
+function checkTitles(){
+  if(!hasTavernPass)return;
+  if(char.dungeonsCompleted>=1)char.title='Tomb Delver';
+  if(char.level>=5)char.title='Ashen Veteran';
+  if(char.bossesDefeated>=3)char.title='Boss Slayer';
+  if(char.dungeonsCompleted>=6)char.title='Chosen of Vael';
+}
+
+function renderLootShop(){
+  const cost=15+char.level*5;
+  const canAfford=char.gold>=cost;
+  const potCount=inventory.filter(i=>i.type==='consumable').reduce((a,i)=>a+(i.count||1),0);
+  document.getElementById('loot-shop').innerHTML=`
+    <div style="border-top:0.5px solid var(--border);padding-top:10px;margin-top:4px">
+      <div class="section-label">Traveling Merchant</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;font-size:13px">
+        <span style="color:var(--text2)">Health Potion &nbsp;<span style="font-family:var(--mono);font-size:11px;color:var(--text3)">${potCount} in bag</span></span>
+        <div style="display:flex;gap:8px;align-items:center">
+          <span style="font-family:var(--mono);font-size:12px;color:var(--gold)">${cost} gp</span>
+          <button class="btn sm" onclick="buyPotionAtTransition(${cost})" ${canAfford?'':'disabled'}>${canAfford?'Buy':'Need '+cost+' gp'}</button>
+        </div>
+      </div>
+      <div style="font-size:11px;color:var(--text3);font-family:var(--mono);margin-top:4px">You have ${char.gold} gp · Price rises with your level</div>
+    </div>`;
+}
+
+function generateLoot(){
+  const rc={common:'r-common',uncommon:'r-uncommon',rare:'r-rare',epic:'r-epic',legendary:'r-legendary'};
+  function pickRarity(){
+    const total=Object.values(RARITY_WEIGHT).reduce((a,b)=>a+b,0);
+    let r=rng(1,total),acc=0;
+    for(const[name,wt]of Object.entries(RARITY_WEIGHT)){acc+=wt;if(r<=acc)return name;}
+    return 'common';
+  }
+  const drops=[];
+  for(let i=0;i<rng(2,4);i++){
+    const rarity=pickRarity();
+    const pool=LOOT.filter(l=>l.rarity===rarity);
+    const tpl=pool[Math.floor(Math.random()*pool.length)]||LOOT[0];
+    const val=Array.isArray(tpl.val)?rng(tpl.val[0],tpl.val[1]):tpl.val;
+    drops.push({...tpl,val,count:1});
+  }
+  drops.push({name:'Health Potion',type:'consumable',stat:'HP',val:10,rarity:'common',count:1});
+  const results=drops.map(drop=>addLootItem(drop));
+
+  // Append loot to game log
+  const log=document.getElementById('game-log');
+  const div=document.createElement('div');
+  div.className='gl-transition';
+  div.style.borderColor='var(--purple)';
+  let html=`<div class="gt-title" style="color:var(--purple)">DUNGEON CLEARED - VICTORY SPOILS</div>
+    <div style="font-size:11px;color:var(--text3);font-family:var(--mono);margin-bottom:8px">${char.dungeonsCompleted} dungeons cleared &middot; ${char.bossesDefeated} bosses slain</div>`;
+  results.forEach(r=>{
+    const d=r.item;
+    const badge=r.action==='equipped'||r.action==='upgraded'
+      ?`<span style="color:var(--green)">equipped</span>`
+      :r.action==='sold'
+      ?`<span style="color:var(--gold)">sold +${r.goldGain}gp</span>`
+      :`<span style="color:var(--text3)">bag</span>`;
+    html+=`<div class="gl-loot-item"><span>&#10022; ${d.name}</span><span style="font-size:11px;color:var(--text2);font-family:var(--mono)">${d.stat} +${d.val}</span><span class="rarity ${rc[d.rarity]||'r-common'}">${d.rarity}</span>${badge}</div>`;
+  });
+  // Merchant
+  const potCost=15+char.level*5;
+  const canAfford=char.gold>=potCost;
+  const potCount=inventory.filter(i=>i.type==='consumable').reduce((a,i)=>a+(i.count||1),0);
+  html+=`<div id="loot-merchant-line" style="border-top:0.5px solid var(--border);margin-top:8px;padding-top:8px;font-size:12px;color:var(--text2)">
+    Traveling Merchant &nbsp;&middot;&nbsp; Potions in bag: ${potCount} &nbsp;&middot;&nbsp; Gold: ${char.gold} gp<br>
+    <button class="btn sm" onclick="buyPotionAtTransition(${potCost})" ${canAfford?'':'disabled'} style="margin-top:6px">Buy Potion (${potCost} gp)</button>
+  </div>`;
+  div.innerHTML=html;
+  log.appendChild(div);
+
+  document.getElementById('explore-actions').innerHTML=`
+    <button class="btn gold" onclick="nextAdventure()">Next Adventure</button>
+    <button class="btn" onclick="saveAndExit()">&#128190; Save &amp; Exit</button>`;
+  document.getElementById('action-row').innerHTML='';
+  renderCharPanel();
+  autoSave();
+  syncActionBar();
+}
+
+function playerDead(){
+  const log=document.getElementById('game-log');
+  const div=document.createElement('div');
+  div.className='gl-transition';
+  div.style.borderColor='var(--red)';
+  div.innerHTML='<div class="gt-title" style="color:var(--red)">FALLEN</div><p style="color:var(--text2)">You have fallen. The Realm claims another soul. Your legend ends here - but it will not be forgotten.</p>';
+  log.appendChild(div);
+  document.getElementById('explore-actions').innerHTML=`
+    <button class="btn" onclick="showScreen(\'screen-chargen\')">New Hero</button>
+    <button class="btn" onclick="showScreen(\'screen-title\')">Main Menu</button>`;
+  document.getElementById('action-row').innerHTML='';
+  syncActionBar();
+}
+
+// ══════════════════════════════════════════════════════════
+// SAVE / LOAD - localStorage
+// ══════════════════════════════════════════════════════════
+const SAVE_KEY = 'realm_of_vael_save_v1';
+
+function buildSaveData(){
+  return {
+    char, inventory, adventureNum,
+    roomIdx, currentFloor,
+    advIdx: activeAdv ? (adventureNum-1) % ADVENTURES.length : null,
+    savedAt: Date.now(),
+  };
+}
+
+function saveGame(){
+  try{
+    const data = buildSaveData();
+    localStorage.setItem(SAVE_KEY, JSON.stringify(data));
+    return true;
+  } catch(e){ return false; }
+}
+
+function loadSave(){
+  try{
+    const raw = localStorage.getItem(SAVE_KEY);
+    if(!raw) return null;
+    return JSON.parse(raw);
+  } catch(e){ return null; }
+}
+
+function deleteSave(){
+  try{ localStorage.removeItem(SAVE_KEY); } catch(e){}
+}
+
+function hasSave(){
+  return !!loadSave();
+}
+
+function saveAndExit(){
+  const ok = saveGame();
+  showScreen('screen-title');
+  initTitleScreen();
+  // Brief confirm toast
+  const info = document.getElementById('save-info');
+  if(info) info.textContent = ok ? '✦ Progress saved - welcome back anytime.' : '⚠ Save failed (storage may be full).';
+}
+
+function continueSave(){
+  const data = loadSave();
+  if(!data){ initTitleScreen(); return; }
+  // Restore state
+  char = data.char;
+  inventory = data.inventory;
+  adventureNum = data.adventureNum;
+  char.cls = ALL_CLASSES.find(c=>c.id===char.cls.id) || FREE_CLASSES[0];
+
+  showScreen('screen-game');
+  renderCharPanel();
+
+  if(data.advIdx !== null){
+    const idx = data.advIdx;
+    activeAdv = JSON.parse(JSON.stringify(ADVENTURES[idx]));
+    const lvl = char.level;
+
+    // Rebuild allRooms using the same scaleMob logic as loadAdventure
+    allRooms=[];
+    activeAdv.floors.forEach(floor=>{
+      floor.rooms.forEach(room=>{
+        const scaledMobs = room.combatRoom && room.mobs
+          ? room.mobs.map(m=>scaleMob(m, floor.floorNum, lvl))
+          : [];
+        allRooms.push({ floor:floor.floorNum, floorName:floor.floorName, floorIntro:floor.floorIntro, ...room, mobs:scaledMobs });
+      });
+    });
+    rooms = allRooms;
+    roomIdx = Math.min(data.roomIdx||0, rooms.length-1);
+    currentFloor = data.currentFloor || 1;
+    char.abilityUsed = false;
+    char.shadowstepActive = false;
+    char.bardStunActive = false;
+
+    document.getElementById('adv-title').textContent = activeAdv.title;
+    document.getElementById('adv-region').textContent = WORLD_REGIONS[activeAdv.region]+' · Adventure '+adventureNum;
+    document.getElementById('dungeon-map').textContent = activeAdv.map;
+    document.getElementById('map-legend').textContent = activeAdv.legend;
+    document.getElementById('map-collapsible').style.display='none';
+    document.getElementById('map-toggle-btn').style.display='';
+    document.getElementById('map-toggle-btn').innerHTML='&#9660; Map';
+    document.getElementById('room-progress-label').style.display='block';
+    document.getElementById('game-log').innerHTML='';
+    document.getElementById('combat-mob-card').style.display='none';
+    renderRoomDots();
+    renderRoom();
+  } else {
+    loadAdventure();
+  }
+}
+
+function deleteSaveAndNew(){
+  if(!confirm('Delete your saved hero and start fresh?')) return;
+  deleteSave();
+  initTitleScreen();
+}
+
+function initTitleScreen(){
+  const save = loadSave();
+  const btns = document.getElementById('title-buttons');
+  const info = document.getElementById('save-info');
+  if(save && save.char && save.char.name){
+    const d = new Date(save.savedAt);
+    const when = d.toLocaleDateString(undefined,{month:'short',day:'numeric'})
+                +' '+d.toLocaleTimeString(undefined,{hour:'2-digit',minute:'2-digit'});
+    btns.innerHTML=`
+      <button class="btn gold" onclick="continueSave()">⚔ Continue - ${save.char.name}</button>
+      <button class="btn" onclick="showScreen('screen-chargen')">New Hero</button>
+      <button class="btn" onclick="showPremium()">✦ Tavern Pass</button>
+      <button class="btn danger" onclick="confirmDeleteHero()" style="font-size:12px">🗑 Delete Hero</button>`;
+    if(info) info.textContent=`${save.char.cls.name} · Lv ${save.char.level} · ${save.char.dungeonsCompleted} dungeons · Saved ${when}`;
+  } else {
+    btns.innerHTML=`
+      <button class="btn gold" onclick="showScreen('screen-chargen')">Begin Your Legend</button>
+      <button class="btn" onclick="showPremium()">✦ Tavern Pass</button>`;
+    if(info) info.textContent='';
+  }
+}
+
+// Auto-save on key checkpoints (after loot, after room clear)
+function autoSave(){
+  if(char && char.name) saveGame();
+}
+
+function confirmDeleteHero(){
+  const save=loadSave();
+  if(!save)return;
+  const btns=document.getElementById('title-buttons');
+  btns.innerHTML=`
+    <div style="font-size:13px;color:var(--red);font-family:var(--mono);margin-bottom:8px;width:100%;text-align:center">
+      Delete <b>${save.char.name}</b> forever? This cannot be undone.
+    </div>
+    <button class="btn danger" onclick="deleteHeroConfirmed()">Yes, delete this hero</button>
+    <button class="btn" onclick="initTitleScreen()">Cancel</button>`;
+}
+
+function deleteHeroConfirmed(){
+  deleteSave();
+  char={}; inventory=[]; adventureNum=0; activeAdv=null;
+  initTitleScreen();
+  const info=document.getElementById('save-info');
+  if(info)info.textContent='Hero deleted. The Realm forgets no one - but it moves on.';
+}
+
+function showPremium(){document.getElementById('premium-modal').style.display='flex';}
+function closePremium(){document.getElementById('premium-modal').style.display='none';}
+
+// Init
+buildClassGrid();
+renderStatGrid();
+initTitleScreen();
+</script>
+</body>
+</html>
