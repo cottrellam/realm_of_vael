@@ -145,7 +145,13 @@ input[type=text]:focus{border-color:var(--gold)}
 /* Loot in log */
 .gl-loot-item{display:flex;justify-content:space-between;align-items:center;padding:4px 0;border-bottom:0.5px solid var(--border);font-size:12px}
 .gl-loot-item:last-child{border-bottom:none}
-/* Overworld scenes */
+/* Overworld mode - reuses game screen, hides dungeon-specific elements */
+#screen-game.ow-mode #explore-panel{display:none}
+#screen-game.ow-mode #room-progress-label{display:none!important}
+#screen-game.ow-mode #room-dots{display:none!important}
+#screen-game.ow-mode #combat-mob-card{display:none!important}
+#ow-header{display:none}
+#screen-game.ow-mode #ow-header{display:block}
 .ow-scene{margin-bottom:16px;padding-bottom:16px;border-bottom:0.5px solid var(--border)}
 .ow-scene:last-child{border-bottom:none}
 .ow-scene-label{font-size:10px;font-family:var(--mono);letter-spacing:1px;color:var(--text3);margin-bottom:8px}
@@ -206,6 +212,9 @@ input[type=text]:focus{border-color:var(--gold)}
     </div>
     <div id="save-info" style="font-size:11px;color:var(--text2);font-family:var(--mono);margin-top:10px;min-height:16px"></div>
     <div style="font-size:10px;color:var(--text3);font-family:var(--mono);margin-top:4px">v1.2 · Realm of Vael · © 2026</div>
+    <div style="margin-top:10px;padding:6px 14px;background:rgba(201,76,76,0.12);border:0.5px solid rgba(201,76,76,0.4);border-radius:6px;font-size:11px;font-family:var(--mono);color:var(--red);letter-spacing:0.5px">
+      ⚗ ALPHA · This game is in active development. Expect bugs, missing content, and frequent updates.
+    </div>
   </div>
 </div>
 
@@ -257,6 +266,15 @@ input[type=text]:focus{border-color:var(--gold)}
   </div>
   <div class="card" id="char-panel"></div>
 
+  <!-- Overworld header — shown instead of explore-panel during travel -->
+  <div class="card" id="ow-header">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start">
+      <div><h2 id="ow-title">The Road</h2>
+      <div class="sub" id="ow-subtitle"></div></div>
+      <span id="ow-location-badge" style="font-size:10px;font-family:var(--mono);color:var(--text3);padding:3px 8px;border:0.5px solid var(--border);border-radius:3px;white-space:nowrap"></span>
+    </div>
+  </div>
+
   <!-- Dungeon header — stays fixed at top of dungeon -->
   <div class="card" id="explore-panel">
     <div style="display:flex;justify-content:space-between;align-items:flex-start">
@@ -288,20 +306,10 @@ input[type=text]:focus{border-color:var(--gold)}
       </div>
     </div>
   </div>
-</div>
-</div>
+</div><!-- end screen-game -->
 
 <!-- ═══ OVERWORLD ═══ -->
-<div class="screen" id="screen-overworld">
-  <div class="card" id="overworld-panel">
-    <div style="display:flex;justify-content:space-between;align-items:flex-start">
-      <div><h2 id="ow-title">The Road</h2>
-      <div class="sub" id="ow-subtitle"></div></div>
-      <span id="ow-location-badge" style="font-size:10px;font-family:var(--mono);color:var(--text3);padding:3px 8px;border:0.5px solid var(--border);border-radius:3px"></span>
-    </div>
-    <div id="ow-log" style="font-size:13px;line-height:1.8;margin-top:8px"></div>
-  </div>
-</div>
+<!-- Overworld reuses screen-game with an ow-mode class to hide dungeon-specific elements -->
 </div><!-- end #wrap -->
 
 <!-- Dev Menu (Easter Egg) -->
@@ -874,14 +882,10 @@ function showScreen(id){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   const inGame=id==='screen-game';
-  // HUD only during gameplay
   document.getElementById('game-hud').style.display=inGame?'block':'none';
-  // Action bar only during gameplay
   document.getElementById('action-bar').style.display=inGame?'block':'none';
-  // Sticky ad only during gameplay (prevents it covering title/chargen on mobile)
   const stickyAd=document.getElementById('sticky-ad');
   if(stickyAd) stickyAd.style.display=inGame?'block':'none';
-  // Extra padding only during gameplay
   document.getElementById('wrap').classList.toggle('in-game', inGame);
   window.scrollTo(0,0);
 }
@@ -894,14 +898,28 @@ function buildClassGrid(){
       onclick="${locked?'showPremium()':'selectClass(\''+c.id+'\')'}"
       onmouseenter="showTooltip(event,'${c.id}')"
       onmouseleave="hideTooltip()"
-      ontouchstart="showTooltip(event,'${c.id}')"
-      ontouchend="hideTooltip()">
+      ontouchstart="startLongPress(event,'${c.id}')"
+      ontouchend="cancelLongPress()"
+      ontouchmove="cancelLongPress()">
       ${c.premium?'<span class="cc-lock">✦</span>':''}
       <div class="cc-icon">${c.icon}</div>
       <div class="cc-name">${c.name}</div>
       <div class="cc-desc">${locked?'Tavern Pass':c.shortDesc}</div>
     </div>`;
   }).join('');
+}
+
+let _lpTimer=null;
+function startLongPress(e,id){
+  _lpTimer=setTimeout(()=>{
+    showTooltip(e,id);
+    // Auto-hide after 3 seconds on touch
+    setTimeout(()=>hideTooltip(),3000);
+  },500);
+}
+function cancelLongPress(){
+  clearTimeout(_lpTimer);
+  _lpTimer=null;
 }
 
 function showTooltip(e,id){
@@ -1994,18 +2012,24 @@ function deleteHeroConfirmed(){
 
 // Called after dungeon 1 loot screen - start the journey to Ashenveil
 function beginOverworld(){
-  // Overworld gets its own padding treatment
-  showScreen('screen-overworld');
-  document.getElementById('wrap').classList.add('in-game');
-  document.getElementById('action-bar').style.display='block';
-  document.getElementById('sticky-ad').style.display='block';
-  document.getElementById('game-hud').style.display='none'; // no HUD in overworld
-  document.getElementById('ow-log').innerHTML='';
+  showScreen('screen-game');
+  document.getElementById('screen-game').classList.add('ow-mode');
+  document.getElementById('game-hud').style.display='block'; // keep HUD for HP/potions
+  document.getElementById('game-log').innerHTML='';
+  // Clear old transition card id so floor transitions work fresh next dungeon
+  const oldCard=document.getElementById('floor-transition-card');
+  if(oldCard) oldCard.removeAttribute('id');
+  renderCharPanel();
   owScene_leavingTomb();
 }
 
+function endOverworld(){
+  document.getElementById('screen-game').classList.remove('ow-mode');
+}
+
 function owAppend(html){
-  document.getElementById('ow-log').insertAdjacentHTML('beforeend',html);
+  const log=document.getElementById('game-log');
+  log.insertAdjacentHTML('beforeend',html);
   requestAnimationFrame(syncActionBar);
 }
 
@@ -2242,10 +2266,8 @@ function owScene_acceptJob(){
 
 // ── TRANSITION TO DUNGEON 2 ──
 function startCryptsDungeon(){
-  showScreen('screen-game');
-  document.getElementById('wrap').classList.add('in-game');
-  document.getElementById('game-hud').style.display='block';
-  adventureNum=1; // set to 1 so loadAdventure increments to 2 (index 1 = Grimhallow)
+  endOverworld();
+  adventureNum=1;
   loadAdventure();
 }
 
@@ -2269,24 +2291,33 @@ function closeDevMenu(){
 }
 
 function devBuildChar(){
-  // Build a level 3 Shardknight with post-tomb gear
   selectedClass=FREE_CLASSES.find(c=>c.id==='paladin');
-  rolledStats={STR:18,DEX:10,CON:14,INT:10,WIS:13,CHA:12};
-  const maxHp=selectedClass.hpBase*2+mod(14)+rollDie(selectedClass.hpBase)+rollDie(selectedClass.hpBase)+rollDie(selectedClass.hpBase); // ~3 level-ups
+  // Roll stats like a real character
+  const rolled={};
+  STATS.forEach(s=>{
+    const dice=[1,2,3,4].map(()=>Math.floor(Math.random()*6)+1);
+    dice.sort((a,b)=>a-b);
+    rolled[s]=dice.slice(1).reduce((a,b)=>a+b,0);
+  });
+  // Apply class stat bonuses
+  (selectedClass.statBonuses||[]).forEach(b=>{ rolled[b.stat]=(rolled[b.stat]||10)+b.val; });
+  const conMod=Math.floor((rolled.CON-10)/2);
+  const hpBase=selectedClass.hpBase||8;
+  const maxHp=Math.max(hpBase*2+conMod+hpBase+hpBase+hpBase, 40);
   char={
-    name:'Shardly Wiplash',cls:selectedClass,
-    stats:{STR:18,DEX:10,CON:14,INT:10,WIS:13,CHA:12},
-    maxHp:Math.max(maxHp,45),hp:Math.max(maxHp,45),
-    xp:450,level:3,gold:180,
-    bossesDefeated:1,dungeonsCompleted:1,title:null,
-    abilityUsed:false,shadowstepActive:false,bardStunActive:false,defendStance:false
+    name:'Shardly Wiplash', cls:selectedClass,
+    stats:rolled,
+    maxHp, hp:maxHp,
+    xp:450, level:3, gold:180,
+    bossesDefeated:1, dungeonsCompleted:1, title:null,
+    abilityUsed:false, shadowstepActive:false, bardStunActive:false, defendStance:false
   };
   inventory=[
-    {name:'Vaelite Sword',  type:'weapon',  stat:'ATK',rarity:'epic',   val:9, count:1},
-    {name:'Thornwood Mail', type:'armor',   stat:'DEF',rarity:'uncommon',val:6, count:1},
-    {name:'Ring of Osserath',type:'accessor',stat:'STR',rarity:'rare',  val:5, count:1},
-    {name:'Health Potion',  type:'consumable',stat:'HP',rarity:'common', val:10,count:4},
-    {name:'Greater Potion', type:'consumable',stat:'HP',rarity:'uncommon',val:25,count:1},
+    {name:'Vaelite Sword',   type:'weapon',   stat:'ATK', rarity:'epic',    val:9,  count:1},
+    {name:'Thornwood Mail',  type:'armor',    stat:'DEF', rarity:'uncommon', val:6,  count:1},
+    {name:'Ring of Osserath',type:'accessor', stat:'STR', rarity:'rare',     val:5,  count:1},
+    {name:'Health Potion',   type:'consumable',stat:'HP', rarity:'common',   val:10, count:4},
+    {name:'Greater Potion',  type:'consumable',stat:'HP', rarity:'uncommon', val:25, count:1},
   ];
 }
 
@@ -2294,25 +2325,17 @@ function devJump(dest){
   closeDevMenu();
   devBuildChar();
   if(dest==='town'){
-    showScreen('screen-overworld');
-    document.getElementById('wrap').classList.add('in-game');
-    document.getElementById('action-bar').style.display='block';
-    document.getElementById('sticky-ad').style.display='block';
-    document.getElementById('game-hud').style.display='none';
-    document.getElementById('ow-log').innerHTML='';
-    owScene_leavingTomb(); // start from the beginning of travel
+    beginOverworld();
   } else if(dest==='crypt'){
-    showScreen('screen-overworld');
-    document.getElementById('wrap').classList.add('in-game');
-    document.getElementById('action-bar').style.display='block';
-    document.getElementById('sticky-ad').style.display='block';
-    document.getElementById('game-hud').style.display='none';
-    document.getElementById('ow-log').innerHTML='';
-    owScene_acceptJob(); // start at departure from town - ends with Enter Crypts button
-  } else if(dest==='tomb'){
+    // Set up char but jump straight to departure scene
     showScreen('screen-game');
-    document.getElementById('wrap').classList.add('in-game');
+    document.getElementById('screen-game').classList.add('ow-mode');
     document.getElementById('game-hud').style.display='block';
+    document.getElementById('game-log').innerHTML='';
+    renderCharPanel();
+    owScene_acceptJob();
+  } else if(dest==='tomb'){
+    endOverworld();
     adventureNum=0;
     loadAdventure();
   }
@@ -2404,6 +2427,10 @@ const GUIDE_CONTENT = {
     <div class="guide-section">
       <h3>CLASS ABILITY RULES</h3>
       <p>Every class ability resets at the start of each new combat room - you always get one use per room. Abilities also reset at floor transitions. Using a Potion or Ability instead of attacking after a Defend will waste the +2 stance bonus.</p>
+    </div>
+    <div class="guide-section">
+      <h3>VIEWING CLASS DETAILS</h3>
+      <p>On the character creation screen, hover over any class card (desktop) or press and hold it for half a second (mobile) to see a full description of the class including its key stats, playstyle, and ability details. Tap anywhere else to dismiss. Tapping a card without holding selects it.</p>
     </div>`,
 
   loot:`
